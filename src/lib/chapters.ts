@@ -3,7 +3,7 @@ export interface Mission {
   title: string;
   subtitle: string;
   xp: number;
-  playable: boolean;
+  playable: boolean; // true = has actual lesson content built
 }
 
 export interface Chapter {
@@ -11,6 +11,38 @@ export interface Chapter {
   title: string;
   icon: string;
   missions: Mission[];
+}
+
+/**
+ * Check if a mission is unlocked based on completed missions.
+ * Rules:
+ * - First mission of Chapter 1 is always unlocked
+ * - A mission unlocks if the previous mission (in same chapter) is completed
+ * - First mission of a new chapter unlocks if ALL missions in previous chapter are completed,
+ *   OR if the last PLAYABLE mission in the previous chapter is completed
+ */
+export function isMissionUnlocked(missionId: string, completedMissions: string[]): boolean {
+  // Find which chapter and position this mission is in
+  for (let ci = 0; ci < chapters.length; ci++) {
+    const ch = chapters[ci];
+    for (let mi = 0; mi < ch.missions.length; mi++) {
+      if (ch.missions[mi].id === missionId) {
+        // First mission of first chapter — always unlocked
+        if (ci === 0 && mi === 0) return true;
+        // Not first mission in chapter — previous mission must be completed
+        if (mi > 0) {
+          return completedMissions.includes(ch.missions[mi - 1].id);
+        }
+        // First mission of chapter — last playable mission of previous chapter must be done
+        const prevChapter = chapters[ci - 1];
+        const lastPlayable = [...prevChapter.missions].reverse().find(m => m.playable);
+        if (lastPlayable && completedMissions.includes(lastPlayable.id)) return true;
+        // Or all missions in previous chapter are completed
+        return prevChapter.missions.every(m => completedMissions.includes(m.id));
+      }
+    }
+  }
+  return false;
 }
 
 export const chapters: Chapter[] = [

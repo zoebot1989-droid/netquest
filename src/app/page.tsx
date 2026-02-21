@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { loadState, getLevelInfo, LEVELS, type GameState } from '@/lib/gameState';
-import { chapters } from '@/lib/chapters';
+import { chapters, isMissionUnlocked } from '@/lib/chapters';
 
 export default function Home() {
   const [state, setState] = useState<GameState | null>(null);
@@ -90,13 +90,17 @@ export default function Home() {
                   <div className="mt-3 space-y-2">
                     {ch.missions.map((m) => {
                       const done = state.completedMissions.includes(m.id);
+                      const unlocked = isMissionUnlocked(m.id, state.completedMissions);
+                      const canPlay = m.playable && unlocked;
+                      const showLocked = !unlocked;
+                      const showComingSoon = unlocked && !m.playable;
                       return (
                         <Link
                           key={m.id}
-                          href={m.playable ? `/learn/${ch.id}/${m.id.split('-')[1]}` : '#'}
-                          className={`flex items-center gap-2 p-2 rounded-lg transition-colors ${m.playable ? 'hover:bg-white/5 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+                          href={canPlay ? `/learn/${ch.id}/${m.id.split('-')[1]}` : '#'}
+                          className={`flex items-center gap-2 p-2 rounded-lg transition-colors ${canPlay ? 'hover:bg-white/5 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
                         >
-                          <span className="text-sm">{done ? '✅' : m.playable ? '▶️' : '🔒'}</span>
+                          <span className="text-sm">{done ? '✅' : showLocked ? '🔒' : showComingSoon ? '🔜' : '▶️'}</span>
                           <div className="flex-1">
                             <div className="text-sm font-medium">{m.title}</div>
                             <div className="text-xs text-gray-500">{m.subtitle}</div>
