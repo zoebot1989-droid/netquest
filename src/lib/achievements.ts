@@ -28,4 +28,13 @@ export const achievements: Achievement[] = [
   { id: 'root-access', title: 'Root Access', description: 'Learn about permissions', icon: '🔓' },
   { id: 'script-kiddie', title: 'Script Kiddie', description: 'Write your first shell script', icon: '📜' },
   { id: 'ssh-agent', title: 'SSH Agent', description: 'SSH into a simulated server', icon: '🛰️' },
+
+  // Linux
+  { id: 'penguin-power', title: 'Penguin Power', description: 'Complete first Linux mission', icon: '🐧' },
+  { id: 'distro-hopper', title: 'Distro Hopper', description: 'Learn about 5+ distributions', icon: '🏄' },
+  { id: 'root-beer', title: 'Root Beer', description: 'Successfully use sudo', icon: '🍺' },
+  { id: 'system-admin', title: 'System Admin', description: 'Manage a service with systemctl', icon: '⚙️' },
+  { id: 'log-detective', title: 'Log Detective', description: 'Find an error in system logs', icon: '🔍' },
+  { id: 'cron-master', title: 'Cron Master', description: 'Write a correct cron expression', icon: '⏰' },
+  { id: 'disk-doctor', title: 'Disk Doctor', description: 'Analyze disk usage', icon: '💾' },
 ];

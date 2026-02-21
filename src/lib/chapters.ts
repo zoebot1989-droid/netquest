@@ -178,6 +178,59 @@ const terminalChapters: Chapter[] = [
   },
 ];
 
+const linuxChapters: Chapter[] = [
+  {
+    id: 1,
+    title: 'Welcome to Linux',
+    icon: '🐧',
+    missions: [
+      { id: 'linux-1-1', title: 'What is Linux?', subtitle: 'History, why it matters, Linux everywhere', xp: 40, playable: true },
+      { id: 'linux-1-2', title: 'Distributions', subtitle: 'Ubuntu, Fedora, Arch — pick your flavor', xp: 50, playable: true },
+      { id: 'linux-1-3', title: 'The Linux Desktop', subtitle: 'GNOME, KDE, XFCE — GUIs on Linux', xp: 50, playable: true },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Users & Groups',
+    icon: '👥',
+    missions: [
+      { id: 'linux-2-1', title: 'Users', subtitle: 'root vs regular, whoami, id, /etc/passwd', xp: 50, playable: true },
+      { id: 'linux-2-2', title: 'Groups', subtitle: 'groups, /etc/group, usermod, groupadd', xp: 50, playable: true },
+      { id: 'linux-2-3', title: 'sudo Power', subtitle: 'sudo, sudoers, with great power...', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 3,
+    title: 'The File System',
+    icon: '📂',
+    missions: [
+      { id: 'linux-3-1', title: 'Everything is a File', subtitle: 'Linux philosophy, file types', xp: 50, playable: true },
+      { id: 'linux-3-2', title: 'Directory Structure', subtitle: '/, /home, /etc, /var — what lives where', xp: 60, playable: true },
+      { id: 'linux-3-3', title: 'Links & Mounts', subtitle: 'Hard links, symlinks, mount points', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Services & Packages',
+    icon: '📦',
+    missions: [
+      { id: 'linux-4-1', title: 'Package Management', subtitle: 'apt, yum, pacman — install anything', xp: 60, playable: true },
+      { id: 'linux-4-2', title: 'Services & systemd', subtitle: 'systemctl start/stop/status', xp: 60, playable: true },
+      { id: 'linux-4-3', title: 'Logs & Monitoring', subtitle: 'journalctl, dmesg, /var/log/', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Linux Administration',
+    icon: '🔧',
+    missions: [
+      { id: 'linux-5-1', title: 'Networking on Linux', subtitle: 'ip addr, ss, /etc/hosts', xp: 60, playable: true },
+      { id: 'linux-5-2', title: 'Cron Jobs', subtitle: 'Schedule tasks like a pro', xp: 70, playable: true },
+      { id: 'linux-5-3', title: 'Disk & Storage', subtitle: 'df, du, lsblk — manage your disks', xp: 70, playable: true },
+    ],
+  },
+];
+
 export const paths: Path[] = [
   {
     id: 'networking',
@@ -198,8 +251,7 @@ export const paths: Path[] = [
     title: 'Linux',
     icon: '🐧',
     description: 'Learn the OS that runs the internet',
-    chapters: [],
-    comingSoon: true,
+    chapters: linuxChapters,
   },
   {
     id: 'coding',

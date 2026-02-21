@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal'];
+const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux'];
 
 const portsData = [
   { port: 20, service: 'FTP Data', protocol: 'TCP' },
@@ -308,6 +308,132 @@ export default function Reference() {
 ├── bin/    Essential commands
 ├── root/   Root user's home
 └── dev/    Device files`}</pre>
+            </div>
+          </div>
+        )}
+        {tab === 6 && (
+          <div className="space-y-4">
+            {/* Directory Structure */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📁 Linux Directory Structure</h3>
+              <pre className="font-mono text-xs text-gray-300">{`/              Root of everything
+├── home/      User home directories
+├── etc/       System configuration files
+│   ├── passwd    User accounts
+│   ├── group     Group definitions
+│   ├── sudoers   sudo permissions
+│   ├── fstab     Filesystem mounts
+│   ├── hosts     Local DNS overrides
+│   └── resolv.conf  DNS servers
+├── var/       Variable data
+│   ├── log/      System logs
+│   └── www/      Web server files
+├── tmp/       Temporary files (cleared on reboot)
+├── bin/       Essential command binaries
+├── usr/bin/   Installed program binaries
+├── dev/       Device files (sda, null, tty)
+├── proc/      Virtual process/kernel info
+├── root/      Root user's home
+└── boot/      Bootloader files`}</pre>
+            </div>
+
+            {/* systemctl commands */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">⚙️ systemctl Commands</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'systemctl status <svc>', desc: 'Check if a service is running' },
+                  { cmd: 'systemctl start <svc>', desc: 'Start a service' },
+                  { cmd: 'systemctl stop <svc>', desc: 'Stop a service' },
+                  { cmd: 'systemctl restart <svc>', desc: 'Restart a service' },
+                  { cmd: 'systemctl enable <svc>', desc: 'Start at boot' },
+                  { cmd: 'systemctl disable <svc>', desc: 'Don\'t start at boot' },
+                  { cmd: 'systemctl list-units', desc: 'List all services' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Package Manager Comparison */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📦 Package Managers</h3>
+              <div className="grid grid-cols-4 gap-1 text-xs font-mono">
+                <div className="text-gray-500 font-sans">Action</div>
+                <div style={{ color: '#ff9500' }}>apt (Debian)</div>
+                <div style={{ color: '#00f0ff' }}>dnf (Fedora)</div>
+                <div style={{ color: '#39ff14' }}>pacman (Arch)</div>
+                <div className="text-gray-400 font-sans">Install</div><div>apt install pkg</div><div>dnf install pkg</div><div>pacman -S pkg</div>
+                <div className="text-gray-400 font-sans">Remove</div><div>apt remove pkg</div><div>dnf remove pkg</div><div>pacman -R pkg</div>
+                <div className="text-gray-400 font-sans">Update</div><div>apt upgrade</div><div>dnf upgrade</div><div>pacman -Syu</div>
+                <div className="text-gray-400 font-sans">Search</div><div>apt search pkg</div><div>dnf search pkg</div><div>pacman -Ss pkg</div>
+              </div>
+            </div>
+
+            {/* Cron Syntax */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">⏰ Cron Syntax</h3>
+              <pre className="font-mono text-xs text-gray-300 mb-2">{`┌─ minute (0-59)
+│ ┌─ hour (0-23)
+│ │ ┌─ day of month (1-31)
+│ │ │ ┌─ month (1-12)
+│ │ │ │ ┌─ day of week (0-7)
+* * * * * command`}</pre>
+              <div className="space-y-1 text-xs font-mono">
+                <div><span style={{ color: '#00f0ff' }}>0 2 * * *</span> <span className="text-gray-500">— Daily at 2 AM</span></div>
+                <div><span style={{ color: '#00f0ff' }}>*/15 * * * *</span> <span className="text-gray-500">— Every 15 minutes</span></div>
+                <div><span style={{ color: '#00f0ff' }}>0 0 * * 0</span> <span className="text-gray-500">— Every Sunday at midnight</span></div>
+                <div><span style={{ color: '#00f0ff' }}>30 9 1 * *</span> <span className="text-gray-500">— 1st of month at 9:30 AM</span></div>
+                <div><span style={{ color: '#00f0ff' }}>0 */6 * * *</span> <span className="text-gray-500">— Every 6 hours</span></div>
+              </div>
+            </div>
+
+            {/* User & Group Commands */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">👥 Users & Groups</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'whoami', desc: 'Show current username' },
+                  { cmd: 'id', desc: 'Show UID, GID, groups' },
+                  { cmd: 'groups', desc: 'Show group memberships' },
+                  { cmd: 'sudo <cmd>', desc: 'Run as root' },
+                  { cmd: 'sudo !!', desc: 'Re-run last command as root' },
+                  { cmd: 'su - <user>', desc: 'Switch user' },
+                  { cmd: 'usermod -aG grp user', desc: 'Add user to group' },
+                  { cmd: 'groupadd <name>', desc: 'Create new group' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Disk & Log Commands */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">💾 Disk & Logs</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'df -h', desc: 'Disk free space per mount' },
+                  { cmd: 'du -sh *', desc: 'Size of items in current dir' },
+                  { cmd: 'lsblk', desc: 'List block devices' },
+                  { cmd: 'free -h', desc: 'Memory/swap usage' },
+                  { cmd: 'mount', desc: 'Show mounted filesystems' },
+                  { cmd: 'journalctl', desc: 'View system journal' },
+                  { cmd: 'journalctl -u svc', desc: 'Logs for specific service' },
+                  { cmd: 'journalctl -p err', desc: 'Only error messages' },
+                  { cmd: 'dmesg', desc: 'Kernel messages' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}

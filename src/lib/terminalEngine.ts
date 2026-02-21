@@ -652,9 +652,338 @@ function runSingleCommand(state: TerminalState, cmd: string, args: string[]): { 
         `        inet 127.0.0.1  netmask 255.0.0.0`,
       );
 
+    case 'id': {
+      const targetUser = args[0] || state.user;
+      if (targetUser === 'root') return out('uid=0(root) gid=0(root) groups=0(root)');
+      if (targetUser === 'user') return out('uid=1000(user) gid=1000(user) groups=1000(user),4(adm),27(sudo),100(users)');
+      return out(`id: '${targetUser}': no such user`);
+    }
+
+    case 'groups': {
+      const targetUser = args[0] || state.user;
+      if (targetUser === 'root') return out('root');
+      if (targetUser === 'user') return out('user adm sudo users');
+      return out(`groups: '${targetUser}': no such user`);
+    }
+
+    case 'su': {
+      const targetUser = args.includes('-') ? (args[args.indexOf('-') + 1] || 'root') : (args[0] || 'root');
+      if (targetUser === 'root') {
+        state.user = 'root';
+        state.cwd = '/root';
+        state.env.USER = 'root';
+        state.env.HOME = '/root';
+        return out(`root@${state.hostname}:/root#`);
+      }
+      state.user = targetUser;
+      state.env.USER = targetUser;
+      return { output: [], state };
+    }
+
+    case 'sudo': {
+      if (args.length === 0) return out('usage: sudo <command>');
+      if (args[0] === '!!') {
+        const lastCmd = state.history.length > 1 ? state.history[state.history.length - 2] : '';
+        if (!lastCmd) return out('sudo: no previous command');
+        const parts2 = parseCommand(lastCmd);
+        return runSingleCommand(state, parts2[0], parts2.slice(1));
+      }
+      const oldUser = state.user;
+      state.user = 'root';
+      const result = runSingleCommand(state, args[0], args.slice(1));
+      result.state.user = oldUser;
+      return result;
+    }
+
+    case 'usermod': {
+      if (args.length < 2) return out('Usage: usermod [options] LOGIN');
+      const targetUser = args[args.length - 1];
+      return out(`usermod: user '${targetUser}' modified`);
+    }
+
+    case 'groupadd': {
+      if (args.length === 0) return out('Usage: groupadd [options] GROUP');
+      return out(`groupadd: group '${args[0]}' added`);
+    }
+
+    case 'ln': {
+      const symbolic = args.includes('-s');
+      const nonFlags = args.filter(a => !a.startsWith('-'));
+      if (nonFlags.length < 2) return out('ln: missing file operand');
+      const target = nonFlags[0];
+      const linkName = nonFlags[1];
+      const linkPath = resolvePath(state.fs, state.cwd, linkName);
+      const { parent, name } = getParentAndName(state.fs, linkPath);
+      if (!parent || parent.type !== 'dir') return out(`ln: failed to create ${symbolic ? 'symbolic ' : ''}link '${linkName}'`);
+      parent.children![name] = {
+        type: 'file', name,
+        content: `-> ${target}`,
+        permissions: symbolic ? 'lrwxrwxrwx'.slice(1) : 'rw-r--r--',
+        owner: state.user, group: state.user, size: target.length,
+        modified: 'Feb 21 12:00'
+      };
+      return { output: [], state };
+    }
+
+    case 'df': {
+      const human = args.includes('-h');
+      if (human) {
+        return out(
+          'Filesystem      Size  Used Avail Use% Mounted on',
+          '/dev/sda1        50G   12G   35G  26% /',
+          'tmpfs           1.0G  4.0M 1020M   1% /tmp',
+          '/dev/sda3       100G   45G   50G  48% /home',
+          'tmpfs           2.0G     0  2.0G   0% /dev/shm',
+        );
+      }
+      return out(
+        'Filesystem     1K-blocks     Used Available Use% Mounted on',
+        '/dev/sda1       52428800 12582912  36700160  26% /',
+        'tmpfs            1048576     4096   1044480   1% /tmp',
+        '/dev/sda3      104857600 47185920  52428800  48% /home',
+      );
+    }
+
+    case 'du': {
+      const human = args.includes('-h');
+      const summary = args.includes('-s');
+      const target = args.find(a => !a.startsWith('-')) || '.';
+      if (summary && human) return out(`1.2G\t${target}`);
+      if (summary) return out(`1258291\t${target}`);
+      if (human) {
+        return out(
+          `4.0K\t${target}/Desktop`,
+          `12K\t${target}/Documents`,
+          `2.1M\t${target}/Downloads`,
+          `0\t${target}/Music`,
+          `3.0M\t${target}/Pictures`,
+          `5.1M\t${target}`,
+        );
+      }
+      return out(
+        `4\t${target}/Desktop`,
+        `12\t${target}/Documents`,
+        `2148\t${target}/Downloads`,
+        `0\t${target}/Music`,
+        `3072\t${target}/Pictures`,
+        `5236\t${target}`,
+      );
+    }
+
+    case 'mount': {
+      if (args.length === 0) {
+        return out(
+          '/dev/sda1 on / type ext4 (rw,relatime,errors=remount-ro)',
+          'tmpfs on /tmp type tmpfs (rw,nosuid,nodev)',
+          '/dev/sda3 on /home type ext4 (rw,relatime)',
+          'proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)',
+          'sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)',
+          'tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev)',
+        );
+      }
+      return out(`mount: ${args.join(' ')}: mounted`);
+    }
+
+    case 'umount':
+      if (args.length === 0) return out('Usage: umount <directory>');
+      return out(`umount: ${args[0]}: unmounted`);
+
+    case 'systemctl': {
+      const subcmd = args[0] || 'status';
+      const service = args[1] || '';
+      if (subcmd === 'status') {
+        if (!service) {
+          return out(
+            '● nginx.service - A high performance web server',
+            '     Loaded: loaded (/etc/systemd/system/nginx.service; enabled)',
+            '     Active: active (running) since Sat 2026-02-21 10:00:00 UTC; 2h ago',
+            '   Main PID: 567 (nginx)',
+            '      Tasks: 2 (limit: 4915)',
+            '     Memory: 12.5M',
+            '     CGroup: /system.slice/nginx.service',
+            '             └─567 nginx: master process /usr/sbin/nginx',
+          );
+        }
+        const activeServices: Record<string, { desc: string; pid: number; active: boolean }> = {
+          'nginx': { desc: 'A high performance web server', pid: 567, active: true },
+          'nginx.service': { desc: 'A high performance web server', pid: 567, active: true },
+          'sshd': { desc: 'OpenBSD Secure Shell server', pid: 234, active: true },
+          'sshd.service': { desc: 'OpenBSD Secure Shell server', pid: 234, active: true },
+          'mysql': { desc: 'MySQL Community Server', pid: 0, active: false },
+          'mysql.service': { desc: 'MySQL Community Server', pid: 0, active: false },
+          'cron': { desc: 'Regular background program processing daemon', pid: 456, active: true },
+          'cron.service': { desc: 'Regular background program processing daemon', pid: 456, active: true },
+        };
+        const svc = activeServices[service.replace('.service', '')] || activeServices[service];
+        if (!svc) return out(`Unit ${service}.service could not be found.`);
+        const name = service.endsWith('.service') ? service : `${service}.service`;
+        if (svc.active) {
+          return out(
+            `● ${name} - ${svc.desc}`,
+            `     Loaded: loaded (/etc/systemd/system/${name}; enabled)`,
+            `     Active: active (running) since Sat 2026-02-21 10:00:00 UTC; 2h ago`,
+            `   Main PID: ${svc.pid} (${service.replace('.service', '')})`,
+            `      Tasks: 2`,
+            `     Memory: 12.5M`,
+          );
+        }
+        return out(
+          `● ${name} - ${svc.desc}`,
+          `     Loaded: loaded (/etc/systemd/system/${name}; enabled)`,
+          `     Active: inactive (dead) since Sat 2026-02-21 12:05:00 UTC; 1min ago`,
+          `   Main PID: ${svc.pid} (code=exited, status=1/FAILURE)`,
+        );
+      }
+      if (subcmd === 'start') return out(`Starting ${service}...`, `✓ ${service} started`);
+      if (subcmd === 'stop') return out(`Stopping ${service}...`, `✓ ${service} stopped`);
+      if (subcmd === 'restart') return out(`Restarting ${service}...`, `✓ ${service} restarted`);
+      if (subcmd === 'enable') return out(`Created symlink /etc/systemd/system/multi-user.target.wants/${service}.service`);
+      if (subcmd === 'disable') return out(`Removed symlink /etc/systemd/system/multi-user.target.wants/${service}.service`);
+      if (subcmd === 'list-units') {
+        return out(
+          'UNIT                    LOAD   ACTIVE SUB     DESCRIPTION',
+          'nginx.service           loaded active running A high performance web server',
+          'sshd.service            loaded active running OpenBSD Secure Shell server',
+          'cron.service            loaded active running Regular background program processing',
+          'systemd-logind.service  loaded active running User Login Management',
+          'mysql.service           loaded failed failed  MySQL Community Server',
+          '',
+          'LOAD   = Reflects whether the unit definition was properly loaded.',
+          'ACTIVE = The high-level unit activation state, i.e. generalization of SUB.',
+        );
+      }
+      return out(`Usage: systemctl [start|stop|restart|status|enable|disable|list-units] [service]`);
+    }
+
+    case 'journalctl': {
+      if (args.includes('-u')) {
+        const svc = args[args.indexOf('-u') + 1] || 'nginx';
+        if (svc === 'mysql' || svc === 'mysql.service') {
+          return out(
+            'Feb 21 12:05:01 netquest systemd[1]: Starting MySQL Community Server...',
+            'Feb 21 12:05:01 netquest mysqld[2345]: ERROR 2002 (HY000): Can\'t connect to local MySQL server through socket',
+            'Feb 21 12:05:01 netquest systemd[1]: mysql.service: Main process exited, code=exited, status=1/FAILURE',
+            'Feb 21 12:05:02 netquest systemd[1]: mysql.service: Failed with result \'exit-code\'.',
+            'Feb 21 12:05:02 netquest systemd[1]: Failed to start MySQL Community Server.',
+          );
+        }
+        return out(
+          `Feb 21 10:00:00 netquest systemd[1]: Starting ${svc}...`,
+          `Feb 21 10:00:01 netquest systemd[1]: Started ${svc}.`,
+          `Feb 21 12:01:00 netquest ${svc}[567]: 192.168.1.1 - GET /index.html 200`,
+        );
+      }
+      if (args.includes('-p') && args.includes('err')) {
+        return out(
+          'Feb 21 12:05:00 netquest kernel: Out of memory: Killed process 1337 (crypto-miner)',
+          'Feb 21 12:05:01 netquest systemd[1]: mysql.service: Main process exited, code=exited, status=1/FAILURE',
+          'Feb 21 12:05:02 netquest systemd[1]: mysql.service: Failed with result \'exit-code\'.',
+        );
+      }
+      return out(
+        '-- Journal begins at Sat 2026-02-21 10:00:00 UTC --',
+        'Feb 21 10:00:00 netquest kernel: Linux version 5.15.0-91-generic',
+        'Feb 21 10:00:01 netquest systemd[1]: Started nginx.service.',
+        'Feb 21 10:00:02 netquest systemd[1]: Started sshd.service.',
+        'Feb 21 12:00:01 netquest systemd[1]: Started Daily apt activities.',
+        'Feb 21 12:05:01 netquest systemd[1]: mysql.service: Main process exited, code=exited, status=1/FAILURE',
+        'Feb 21 12:05:02 netquest systemd[1]: mysql.service: Failed with result \'exit-code\'.',
+      );
+    }
+
+    case 'dmesg': {
+      return out(
+        '[    0.000000] Linux version 5.15.0-91-generic (buildd@lcy02-amd64-051)',
+        '[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-5.15.0-91-generic root=UUID=a1b2c3d4',
+        '[    0.100000] BIOS-provided physical RAM map:',
+        '[    0.100000]  BIOS-e820: [mem 0x0000000000000000-0x000000007fffffff] usable',
+        '[    0.500000] Memory: 2097152K/2097152K available (12288K kernel code)',
+        '[    1.000000] CPU: Intel(R) Core(TM) i5-9600K CPU @ 3.70GHz',
+        '[    1.200000] smpboot: CPU0: Intel(R) Core(TM) i5-9600K (family: 0x6, model: 0x9e)',
+        '[    2.000000] NET: Registered PF_INET protocol family',
+        '[    2.500000] EXT4-fs (sda1): mounted filesystem with ordered data mode',
+        '[    3.000000] systemd[1]: Detected architecture x86-64.',
+        '[42069.123000] Out of memory: Killed process 1337 (crypto-miner) total-vm:4096000kB',
+      );
+    }
+
     case 'ip':
-      if (args[0] === 'addr') return out(`1: lo: inet 127.0.0.1/8`, `2: eth0: inet 192.168.1.10/24`);
-      return out('Usage: ip addr');
+      if (args[0] === 'addr' || args[0] === 'a') {
+        return out(
+          '1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN',
+          '    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00',
+          '    inet 127.0.0.1/8 scope host lo',
+          '    inet6 ::1/128 scope host',
+          '2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP',
+          '    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff',
+          '    inet 192.168.1.10/24 brd 192.168.1.255 scope global dynamic eth0',
+          '    inet6 fe80::42:acff:fe11:2/64 scope link',
+        );
+      }
+      if (args[0] === 'route' || args[0] === 'r') {
+        return out(
+          'default via 192.168.1.1 dev eth0 proto dhcp metric 100',
+          '192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.10 metric 100',
+        );
+      }
+      return out('Usage: ip [addr|route]');
+
+    case 'ss': {
+      return out(
+        'Netid  State   Recv-Q  Send-Q    Local Address:Port     Peer Address:Port',
+        'tcp    LISTEN  0       128       0.0.0.0:22              0.0.0.0:*',
+        'tcp    LISTEN  0       511       0.0.0.0:80              0.0.0.0:*',
+        'tcp    LISTEN  0       511       0.0.0.0:443             0.0.0.0:*',
+        'tcp    ESTAB   0       0         192.168.1.10:52341     142.250.80.46:443',
+        'tcp    ESTAB   0       0         192.168.1.10:22         10.0.0.5:49832',
+        'udp    UNCONN  0       0         127.0.0.53:53           0.0.0.0:*',
+      );
+    }
+
+    case 'crontab': {
+      if (args.includes('-l')) {
+        return out(
+          '# Edit this file to introduce tasks to be run by cron.',
+          '# m h  dom mon dow   command',
+          '0 2 * * * /usr/bin/backup.sh',
+          '*/15 * * * * /usr/bin/check-health.sh',
+          '0 0 * * 0 /usr/bin/weekly-report.sh',
+        );
+      }
+      if (args.includes('-e')) {
+        return out('crontab: editing crontab for user', '(simulated — use crontab -l to view)');
+      }
+      if (args.includes('-r')) {
+        return out('crontab: removed crontab for user');
+      }
+      return out('usage: crontab [-l | -e | -r]');
+    }
+
+    case 'lsblk': {
+      return out(
+        'NAME   MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS',
+        'sda      8:0    0    50G  0 disk',
+        '├─sda1   8:1    0    49G  0 part /',
+        '└─sda2   8:2    0     1G  0 part [SWAP]',
+        'sdb      8:16   0   100G  0 disk',
+        '└─sdb1   8:17   0   100G  0 part /home',
+      );
+    }
+
+    case 'free': {
+      if (args.includes('-h')) {
+        return out(
+          '               total        used        free      shared  buff/cache   available',
+          'Mem:           2.0Gi       512Mi       512Mi        16Mi       1.0Gi       1.5Gi',
+          'Swap:          1.0Gi        48Mi       976Mi',
+        );
+      }
+      return out(
+        '               total        used        free      shared  buff/cache   available',
+        'Mem:         2097152      524288      524288       16384     1048576     1572864',
+        'Swap:        1048576       49152      999424',
+      );
+    }
 
     case 'iptables':
       return out(
