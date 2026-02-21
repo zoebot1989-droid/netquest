@@ -48,7 +48,7 @@ export default function PortForwardingMission() {
     if (tunnelStep < 2) {
       setTunnelStep(tunnelStep + 1);
     } else {
-      completeMission('4-2', 75);
+      completeMission('net-4-2', 75);
       setTimeout(() => setComplete(true), 500);
     }
   };

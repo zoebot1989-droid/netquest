@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-export default function MissionComplete({ xp, message }: { xp: number; message?: string }) {
+export default function MissionComplete({ xp, message, backHref }: { xp: number; message?: string; backHref?: string }) {
   return (
     <motion.div
       initial={{ scale: 0.5, opacity: 0 }}
@@ -25,7 +25,7 @@ export default function MissionComplete({ xp, message }: { xp: number; message?:
         <div className="text-lg font-mono mb-6" style={{ color: '#00f0ff' }}>
           +{xp} XP
         </div>
-        <Link href="/" className="btn-primary inline-block">
+        <Link href={backHref || '/'} className="btn-primary inline-block">
           Continue
         </Link>
       </div>

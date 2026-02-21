@@ -25,6 +25,25 @@ const DEFAULT_STATE: GameState = {
 const STORAGE_KEY = 'netquest-state';
 const LIFE_REGEN_MS = 30 * 60 * 1000; // 30 min per life
 
+// Migration: old mission IDs (1-1) → new (net-1-1)
+const OLD_TO_NEW: Record<string, string> = {
+  '1-1': 'net-1-1', '1-2': 'net-1-2', '1-3': 'net-1-3',
+  '2-1': 'net-2-1', '2-2': 'net-2-2', '2-3': 'net-2-3',
+  '3-1': 'net-3-1', '3-2': 'net-3-2', '3-3': 'net-3-3',
+  '4-1': 'net-4-1', '4-2': 'net-4-2', '4-3': 'net-4-3', '4-4': 'net-4-4',
+  '5-1': 'net-5-1', '5-2': 'net-5-2', '5-3': 'net-5-3', '5-4': 'net-5-4',
+  '6-1': 'net-6-1', '6-2': 'net-6-2', '6-3': 'net-6-3',
+};
+
+function migrateState(state: GameState): GameState {
+  let migrated = false;
+  state.completedMissions = state.completedMissions.map(id => {
+    if (OLD_TO_NEW[id]) { migrated = true; return OLD_TO_NEW[id]; }
+    return id;
+  });
+  return state;
+}
+
 export const LEVELS = [
   { name: 'Noob', minXP: 0 },
   { name: 'Script Kiddie', minXP: 100 },
@@ -32,11 +51,12 @@ export const LEVELS = [
   { name: 'Sysadmin', minXP: 600 },
   { name: 'Network Engineer', minXP: 1000 },
   { name: 'Architect', minXP: 1500 },
+  { name: 'Wizard', minXP: 2200 },
 ];
 
 export function getLevelInfo(xp: number) {
   let current = LEVELS[0];
-  let next = LEVELS[1];
+  let next: (typeof LEVELS)[0] | null = LEVELS[1];
   for (let i = LEVELS.length - 1; i >= 0; i--) {
     if (xp >= LEVELS[i].minXP) {
       current = LEVELS[i];
@@ -52,7 +72,8 @@ export function loadState(): GameState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_STATE };
-    const state = { ...DEFAULT_STATE, ...JSON.parse(raw) };
+    let state = { ...DEFAULT_STATE, ...JSON.parse(raw) };
+    state = migrateState(state);
     // Regen lives
     const now = Date.now();
     if (state.lives < state.maxLives) {
@@ -69,6 +90,7 @@ export function loadState(): GameState {
     if (state.lastPlayed !== today && state.lastPlayed !== yesterday) {
       state.streak = 0;
     }
+    saveState(state);
     return state;
   } catch {
     return { ...DEFAULT_STATE };

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Commands'];
+const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal'];
 
 const portsData = [
   { port: 20, service: 'FTP Data', protocol: 'TCP' },
@@ -24,6 +24,97 @@ const portsData = [
   { port: 6379, service: 'Redis', protocol: 'TCP' },
   { port: 8080, service: 'HTTP Alt', protocol: 'TCP' },
   { port: 27017, service: 'MongoDB', protocol: 'TCP' },
+];
+
+const terminalCategories = [
+  {
+    title: '📂 Navigation',
+    commands: [
+      { cmd: 'pwd', desc: 'Print current directory' },
+      { cmd: 'ls / ls -la', desc: 'List files (-la for details + hidden)' },
+      { cmd: 'cd <dir>', desc: 'Change directory' },
+      { cmd: 'cd .. / cd ~', desc: 'Go up one level / go home' },
+    ],
+  },
+  {
+    title: '📝 Files',
+    commands: [
+      { cmd: 'touch <file>', desc: 'Create empty file' },
+      { cmd: 'mkdir <dir>', desc: 'Create directory' },
+      { cmd: 'cp <src> <dest>', desc: 'Copy file/directory' },
+      { cmd: 'mv <src> <dest>', desc: 'Move or rename' },
+      { cmd: 'rm <file>', desc: 'Delete file' },
+      { cmd: 'rm -rf <dir>', desc: 'Delete directory (⚠️ careful!)' },
+    ],
+  },
+  {
+    title: '👀 Reading',
+    commands: [
+      { cmd: 'cat <file>', desc: 'Print file contents' },
+      { cmd: 'head -n 5 <file>', desc: 'First 5 lines' },
+      { cmd: 'tail -n 5 <file>', desc: 'Last 5 lines' },
+      { cmd: 'less <file>', desc: 'Scrollable viewer' },
+      { cmd: 'wc -l <file>', desc: 'Count lines' },
+    ],
+  },
+  {
+    title: '🔍 Search',
+    commands: [
+      { cmd: 'grep <pattern> <file>', desc: 'Search text in file' },
+      { cmd: 'find . -name "*.txt"', desc: 'Find files by name' },
+      { cmd: 'which <cmd>', desc: 'Find command location' },
+    ],
+  },
+  {
+    title: '🔗 Pipes & Redirect',
+    commands: [
+      { cmd: 'cmd1 | cmd2', desc: 'Pipe output to next command' },
+      { cmd: 'cmd > file', desc: 'Write output to file (overwrite)' },
+      { cmd: 'cmd >> file', desc: 'Append output to file' },
+    ],
+  },
+  {
+    title: '🔐 Permissions',
+    commands: [
+      { cmd: 'chmod +x <file>', desc: 'Make executable' },
+      { cmd: 'chmod 755 <file>', desc: 'rwxr-xr-x' },
+      { cmd: 'chmod 644 <file>', desc: 'rw-r--r--' },
+      { cmd: 'chown user:group <file>', desc: 'Change owner' },
+    ],
+  },
+  {
+    title: '⚙️ System',
+    commands: [
+      { cmd: 'ps / top', desc: 'List/monitor processes' },
+      { cmd: 'kill <PID>', desc: 'Stop a process' },
+      { cmd: 'export VAR=val', desc: 'Set environment variable' },
+      { cmd: 'env', desc: 'Show all env variables' },
+      { cmd: 'apt install <pkg>', desc: 'Install package' },
+      { cmd: 'ssh user@host', desc: 'Remote shell access' },
+    ],
+  },
+];
+
+const permissionsRef = [
+  { num: '7', sym: 'rwx', desc: 'Read + Write + Execute' },
+  { num: '6', sym: 'rw-', desc: 'Read + Write' },
+  { num: '5', sym: 'r-x', desc: 'Read + Execute' },
+  { num: '4', sym: 'r--', desc: 'Read only' },
+  { num: '3', sym: '-wx', desc: 'Write + Execute' },
+  { num: '2', sym: '-w-', desc: 'Write only' },
+  { num: '1', sym: '--x', desc: 'Execute only' },
+  { num: '0', sym: '---', desc: 'No permissions' },
+];
+
+const shortcuts = [
+  { key: 'Ctrl+C', desc: 'Stop current command' },
+  { key: 'Ctrl+Z', desc: 'Pause/suspend command' },
+  { key: 'Ctrl+D', desc: 'Exit shell / EOF' },
+  { key: 'Ctrl+R', desc: 'Search command history' },
+  { key: 'Ctrl+L', desc: 'Clear screen (like clear)' },
+  { key: 'Tab', desc: 'Auto-complete file/command name' },
+  { key: '↑ / ↓', desc: 'Previous/next command in history' },
+  { key: '!!', desc: 'Repeat last command' },
 ];
 
 export default function Reference() {
@@ -53,11 +144,11 @@ export default function Reference() {
               <div className="p-2 bg-gray-800/50 font-semibold" style={{ color: '#39ff14' }}>Service</div>
               <div className="p-2 bg-gray-800/50 font-semibold text-gray-400">Protocol</div>
               {portsData.map(p => (
-                <>
-                  <div key={`${p.port}-p`} className="p-2 border-t border-gray-800/50" style={{ color: '#00f0ff' }}>{p.port}</div>
-                  <div key={`${p.port}-s`} className="p-2 border-t border-gray-800/50">{p.service}</div>
-                  <div key={`${p.port}-pr`} className="p-2 border-t border-gray-800/50 text-gray-500">{p.protocol}</div>
-                </>
+                <div key={p.port} className="contents">
+                  <div className="p-2 border-t border-gray-800/50" style={{ color: '#00f0ff' }}>{p.port}</div>
+                  <div className="p-2 border-t border-gray-800/50">{p.service}</div>
+                  <div className="p-2 border-t border-gray-800/50 text-gray-500">{p.protocol}</div>
+                </div>
               ))}
             </div>
           </div>
@@ -156,6 +247,68 @@ export default function Reference() {
                 <div className="text-xs text-gray-500">{c.desc}</div>
               </div>
             ))}
+          </div>
+        )}
+
+        {tab === 5 && (
+          <div className="space-y-4">
+            {/* Commands by category */}
+            {terminalCategories.map(cat => (
+              <div key={cat.title} className="card">
+                <h3 className="font-semibold mb-2 text-sm">{cat.title}</h3>
+                <div className="space-y-1">
+                  {cat.commands.map(c => (
+                    <div key={c.cmd} className="flex gap-2 text-xs">
+                      <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                      <span className="text-gray-500">— {c.desc}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Permissions */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔐 Permissions (chmod)</h3>
+              <div className="font-mono text-xs space-y-1">
+                {permissionsRef.map(p => (
+                  <div key={p.num} className="flex gap-3">
+                    <span style={{ color: '#00f0ff' }}>{p.num}</span>
+                    <span style={{ color: '#39ff14' }}>{p.sym}</span>
+                    <span className="text-gray-500">{p.desc}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">Example: 755 = rwxr-xr-x (owner: all, group: read+exec, others: read+exec)</p>
+            </div>
+
+            {/* Keyboard shortcuts */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">⌨️ Keyboard Shortcuts</h3>
+              <div className="space-y-1">
+                {shortcuts.map(s => (
+                  <div key={s.key} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0 bg-gray-800 px-1.5 py-0.5 rounded" style={{ color: '#ff9500' }}>{s.key}</span>
+                    <span className="text-gray-400">{s.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Directory structure */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📁 Linux Directory Structure</h3>
+              <pre className="font-mono text-xs text-gray-300">{`/           Root of everything
+├── home/   User home directories
+├── etc/    System configuration
+├── var/    Variable data (logs, www)
+├── tmp/    Temporary files
+├── usr/    User programs
+│   └── bin/  Installed programs
+├── bin/    Essential commands
+├── root/   Root user's home
+└── dev/    Device files`}</pre>
+            </div>
           </div>
         )}
       </motion.div>

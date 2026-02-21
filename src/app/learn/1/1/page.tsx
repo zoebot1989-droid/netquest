@@ -80,7 +80,7 @@ export default function IPBasics() {
   const handleQuiz = (answer: number) => {
     setQuizAnswer(answer);
     if (answer === 2) {
-      completeMission('1-1', 50);
+      completeMission('net-1-1', 50);
       setTimeout(() => setComplete(true), 500);
     } else {
       loseLife();

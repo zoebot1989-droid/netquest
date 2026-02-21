@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { loadState, getLevelInfo, LEVELS, type GameState } from '@/lib/gameState';
-import { chapters, isMissionUnlocked } from '@/lib/chapters';
+import { loadState, getLevelInfo, type GameState } from '@/lib/gameState';
+import { paths, getPathMissionCount, getPathCompletedCount } from '@/lib/chapters';
 
 export default function Home() {
   const [state, setState] = useState<GameState | null>(null);
@@ -24,7 +24,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold glow-cyan" style={{ color: '#00f0ff' }}>
           ⚡ NetQuest
         </h1>
-        <p className="text-gray-500 text-sm mt-1">Learn networking by doing</p>
+        <p className="text-gray-500 text-sm mt-1">Learn tech by doing</p>
       </motion.div>
 
       {/* Stats Row */}
@@ -64,53 +64,48 @@ export default function Home() {
         {next && <p className="text-xs text-gray-500 mt-1">Next: {next.name}</p>}
       </motion.div>
 
-      {/* Chapters */}
+      {/* Learning Paths */}
       <div>
-        <h2 className="text-lg font-semibold mb-3">📚 Chapters</h2>
-        <div className="space-y-3">
-          {chapters.map((ch, i) => {
-            const completed = ch.missions.filter((m) => state.completedMissions.includes(m.id)).length;
-            const total = ch.missions.length;
+        <h2 className="text-lg font-semibold mb-3">🎯 Choose Your Path</h2>
+        <div className="grid grid-cols-2 gap-3">
+          {paths.map((path, i) => {
+            const total = getPathMissionCount(path.id);
+            const completed = getPathCompletedCount(path.id, state.completedMissions);
+            const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+
             return (
               <motion.div
-                key={ch.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * i }}
+                key={path.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.05 * i }}
               >
-                <div className="card">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{ch.icon}</span>
-                    <div className="flex-1">
-                      <h3 className="font-semibold">Chapter {ch.id}: {ch.title}</h3>
-                      <p className="text-xs text-gray-500">{completed}/{total} missions complete</p>
-                    </div>
-                    <span className="text-xs text-gray-600">{completed === total ? '✅' : `${Math.round((completed / total) * 100)}%`}</span>
+                {path.comingSoon ? (
+                  <div className="card text-center py-5 opacity-40 cursor-not-allowed">
+                    <div className="text-3xl mb-2">{path.icon}</div>
+                    <h3 className="font-semibold text-sm">{path.title}</h3>
+                    <p className="text-xs text-gray-500 mt-1">Coming Soon</p>
                   </div>
-                  <div className="mt-3 space-y-2">
-                    {ch.missions.map((m) => {
-                      const done = state.completedMissions.includes(m.id);
-                      const unlocked = isMissionUnlocked(m.id, state.completedMissions);
-                      const canPlay = m.playable && unlocked;
-                      const showLocked = !unlocked;
-                      const showComingSoon = unlocked && !m.playable;
-                      return (
-                        <Link
-                          key={m.id}
-                          href={canPlay ? `/learn/${ch.id}/${m.id.split('-')[1]}` : '#'}
-                          className={`flex items-center gap-2 p-2 rounded-lg transition-colors ${canPlay ? 'hover:bg-white/5 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
-                        >
-                          <span className="text-sm">{done ? '✅' : showLocked ? '🔒' : showComingSoon ? '🔜' : '▶️'}</span>
-                          <div className="flex-1">
-                            <div className="text-sm font-medium">{m.title}</div>
-                            <div className="text-xs text-gray-500">{m.subtitle}</div>
+                ) : (
+                  <Link href={`/path/${path.id}`}>
+                    <div className="card text-center py-5 hover:border-[#00f0ff]/40 transition-all cursor-pointer">
+                      <div className="text-3xl mb-2">{path.icon}</div>
+                      <h3 className="font-semibold text-sm">{path.title}</h3>
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">{path.description}</p>
+                      {total > 0 && (
+                        <div className="mt-3">
+                          <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full transition-all"
+                              style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #00f0ff, #39ff14)' }}
+                            />
                           </div>
-                          <span className="text-xs font-mono" style={{ color: '#00f0ff' }}>+{m.xp}xp</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
+                          <p className="text-xs text-gray-500 mt-1">{completed}/{total} missions</p>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                )}
               </motion.div>
             );
           })}

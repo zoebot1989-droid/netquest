@@ -90,7 +90,7 @@ export default function PortsMission() {
       setScore(score + 1);
       setSpeedCount(speedCount + 1);
       if (speedCount + 1 >= 5) {
-        completeMission('2-1', 50);
+        completeMission('net-2-1', 50);
         setTimeout(() => setComplete(true), 500);
       } else {
         generateSpeedRound();

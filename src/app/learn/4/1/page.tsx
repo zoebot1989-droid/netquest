@@ -51,7 +51,7 @@ export default function LocalhostMission() {
     const q = quizQuestions[quizStep];
     if (answer === q.correct) {
       if (quizStep + 1 >= quizQuestions.length) {
-        completeMission('4-1', 50);
+        completeMission('net-4-1', 50);
         setTimeout(() => setComplete(true), 500);
       } else {
         setQuizStep(quizStep + 1);

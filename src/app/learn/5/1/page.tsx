@@ -96,7 +96,7 @@ export default function RoutePacketMission() {
             if (p >= newPath.length - 1) {
               clearInterval(interval);
               setAnimating(false);
-              completeMission('5-1', 75);
+              completeMission('net-5-1', 75);
               setTimeout(() => setComplete(true), 1000);
               return p;
             }
@@ -106,7 +106,7 @@ export default function RoutePacketMission() {
       } else {
         setPuzzleComplete(true);
         setFeedback('You reached the server, but took a longer route! Still counts though.');
-        completeMission('5-1', 75);
+        completeMission('net-5-1', 75);
         setTimeout(() => setComplete(true), 2000);
       }
     }

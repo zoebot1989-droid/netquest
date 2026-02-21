@@ -77,7 +77,7 @@ export default function VPSMission() {
   const handleQuiz = (answer: number) => {
     if (answer === 1) {
       setQuizDone(true);
-      completeMission('4-3', 100);
+      completeMission('net-4-3', 100);
       setTimeout(() => setComplete(true), 500);
     } else {
       loseLife();
