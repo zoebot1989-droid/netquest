@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python'];
+const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python', 'Web Dev'];
 
 const portsData = [
   { port: 20, service: 'FTP Data', protocol: 'TCP' },
@@ -634,6 +634,210 @@ finally:
                     <div><span style={{ color: '#39ff14' }}>in</span> <span style={{ color: '#39ff14' }}>not in</span> <span style={{ color: '#39ff14' }}>is</span></div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === 8 && (
+          <div className="space-y-4">
+            {/* HTML Tags */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🏗️ Common HTML Tags</h3>
+              <div className="space-y-1">
+                {[
+                  { tag: '<h1>-<h6>', desc: 'Headings (h1 biggest, h6 smallest)' },
+                  { tag: '<p>', desc: 'Paragraph text' },
+                  { tag: '<a href="url">', desc: 'Hyperlink' },
+                  { tag: '<img src="" alt="">', desc: 'Image (self-closing)' },
+                  { tag: '<div> / <span>', desc: 'Generic block/inline container' },
+                  { tag: '<ul> / <ol> / <li>', desc: 'Lists (unordered/ordered/item)' },
+                  { tag: '<header> <nav> <main>', desc: 'Semantic layout tags' },
+                  { tag: '<section> <article>', desc: 'Content grouping' },
+                  { tag: '<footer> <aside>', desc: 'Footer and sidebar' },
+                  { tag: '<form> <input> <button>', desc: 'Form elements' },
+                  { tag: '<table> <tr> <td> <th>', desc: 'Table elements' },
+                  { tag: '<strong> / <em>', desc: 'Bold / italic emphasis' },
+                ].map(t => (
+                  <div key={t.tag} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{t.tag}</span>
+                    <span className="text-gray-500">— {t.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CSS Properties */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🎨 CSS Properties</h3>
+              <div className="space-y-2 text-xs">
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#00f0ff' }}>Layout</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>display: flex | grid | block | inline | none</div>
+                    <div>position: static | relative | absolute | fixed | sticky</div>
+                    <div>width, height, max-width, min-height</div>
+                    <div>overflow: hidden | scroll | auto</div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#39ff14' }}>Spacing</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>margin: 10px (outside spacing)</div>
+                    <div>padding: 10px (inside spacing)</div>
+                    <div>gap: 10px (flex/grid gap)</div>
+                    <div>box-sizing: border-box (always use!)</div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#ff9500' }}>Typography</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>font-size, font-weight, font-family</div>
+                    <div>color, text-align, line-height</div>
+                    <div>text-decoration, text-transform</div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1 text-purple-400">Visual</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>background, background-color, background-image</div>
+                    <div>border, border-radius, box-shadow</div>
+                    <div>opacity, transition, transform</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Flexbox */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📦 Flexbox</h3>
+              <div className="font-mono text-xs space-y-1">
+                {[
+                  { prop: 'display: flex', desc: 'Enable flexbox' },
+                  { prop: 'flex-direction', desc: 'row | column | row-reverse | column-reverse' },
+                  { prop: 'justify-content', desc: 'center | space-between | space-around | flex-start | flex-end' },
+                  { prop: 'align-items', desc: 'center | flex-start | flex-end | stretch | baseline' },
+                  { prop: 'flex-wrap', desc: 'wrap | nowrap' },
+                  { prop: 'gap', desc: 'Space between items (e.g. 10px)' },
+                  { prop: 'flex: 1', desc: 'Grow to fill space (on child)' },
+                  { prop: 'align-self', desc: 'Override align-items for one child' },
+                ].map(p => (
+                  <div key={p.prop} className="flex gap-2">
+                    <span className="shrink-0" style={{ color: '#00f0ff' }}>{p.prop}</span>
+                    <span className="text-gray-500">— {p.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Grid */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📐 CSS Grid</h3>
+              <div className="font-mono text-xs space-y-1">
+                {[
+                  { prop: 'display: grid', desc: 'Enable grid' },
+                  { prop: 'grid-template-columns', desc: '1fr 1fr 1fr | repeat(3, 1fr) | 200px 1fr' },
+                  { prop: 'grid-template-rows', desc: 'auto 1fr auto' },
+                  { prop: 'gap', desc: 'Space between cells' },
+                  { prop: 'grid-column: span 2', desc: 'Item spans 2 columns' },
+                  { prop: 'place-items: center', desc: 'Center all items' },
+                ].map(p => (
+                  <div key={p.prop} className="flex gap-2">
+                    <span className="shrink-0" style={{ color: '#39ff14' }}>{p.prop}</span>
+                    <span className="text-gray-500">— {p.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* JavaScript DOM */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">⚡ JavaScript DOM</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'document.querySelector(".class")', desc: 'Select first match' },
+                  { cmd: 'document.querySelectorAll("tag")', desc: 'Select all matches' },
+                  { cmd: 'document.getElementById("id")', desc: 'Select by ID' },
+                  { cmd: 'el.textContent = "text"', desc: 'Set text (safe)' },
+                  { cmd: 'el.innerHTML = "<b>html</b>"', desc: 'Set HTML (careful!)' },
+                  { cmd: 'el.style.color = "red"', desc: 'Change inline style' },
+                  { cmd: 'el.classList.add("active")', desc: 'Add CSS class' },
+                  { cmd: 'el.classList.toggle("dark")', desc: 'Toggle CSS class' },
+                  { cmd: 'el.setAttribute("href", url)', desc: 'Set attribute' },
+                  { cmd: 'document.createElement("div")', desc: 'Create new element' },
+                  { cmd: 'parent.appendChild(child)', desc: 'Add element to DOM' },
+                  { cmd: 'el.remove()', desc: 'Remove element' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Events */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🖱️ Events</h3>
+              <div className="font-mono text-xs space-y-1">
+                {[
+                  { event: 'click', desc: 'Element clicked' },
+                  { event: 'submit', desc: 'Form submitted' },
+                  { event: 'input', desc: 'Input value changes' },
+                  { event: 'keydown / keyup', desc: 'Key pressed/released' },
+                  { event: 'mouseover / mouseout', desc: 'Mouse enter/leave' },
+                  { event: 'scroll', desc: 'Page/element scrolled' },
+                  { event: 'load', desc: 'Page finished loading' },
+                  { event: 'DOMContentLoaded', desc: 'HTML parsed (use this!)' },
+                ].map(e => (
+                  <div key={e.event} className="flex gap-2">
+                    <span style={{ color: '#ff9500' }}>{e.event}</span>
+                    <span className="text-gray-500">— {e.desc}</span>
+                  </div>
+                ))}
+              </div>
+              <pre className="font-mono text-xs text-gray-300 mt-2">{`el.addEventListener("click", (event) => {
+  event.preventDefault(); // stop default
+  // your code here
+});`}</pre>
+            </div>
+
+            {/* Fetch */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🌐 Fetch API</h3>
+              <pre className="font-mono text-xs text-gray-300">{`// With .then()
+fetch("https://api.example.com/data")
+  .then(res => res.json())
+  .then(data => console.log(data))
+  .catch(err => console.error(err));
+
+// With async/await
+async function getData() {
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}`}</pre>
+            </div>
+
+            {/* Breakpoints */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📱 Responsive Breakpoints</h3>
+              <div className="font-mono text-xs space-y-1">
+                {[
+                  { bp: '640px', desc: 'Small (large phones)' },
+                  { bp: '768px', desc: 'Medium (tablets)' },
+                  { bp: '1024px', desc: 'Large (laptops)' },
+                  { bp: '1280px', desc: 'XL (desktops)' },
+                  { bp: '1536px', desc: '2XL (large screens)' },
+                ].map(b => (
+                  <div key={b.bp} className="flex gap-2">
+                    <span style={{ color: '#00f0ff' }}>@media (min-width: {b.bp})</span>
+                    <span className="text-gray-500">— {b.desc}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

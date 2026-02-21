@@ -284,6 +284,59 @@ const pythonChapters: Chapter[] = [
   },
 ];
 
+const webdevChapters: Chapter[] = [
+  {
+    id: 1,
+    title: 'HTML Foundations',
+    icon: '🏗️',
+    missions: [
+      { id: 'web-1-1', title: 'The Skeleton of the Web', subtitle: 'HTML tags, elements, attributes — build your first page', xp: 50, playable: true },
+      { id: 'web-1-2', title: 'Structure & Semantics', subtitle: 'header, nav, main, section — meaningful HTML', xp: 60, playable: true },
+      { id: 'web-1-3', title: 'Forms & Inputs', subtitle: 'Build interactive forms with inputs, selects, labels', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 2,
+    title: 'CSS Styling',
+    icon: '🎨',
+    missions: [
+      { id: 'web-2-1', title: 'Making Things Pretty', subtitle: 'Selectors, properties, colors, fonts', xp: 50, playable: true },
+      { id: 'web-2-2', title: 'The Box Model', subtitle: 'Content, padding, border, margin — how layout works', xp: 60, playable: true },
+      { id: 'web-2-3', title: 'Flexbox & Grid', subtitle: 'Modern layout with flex and grid', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 3,
+    title: 'JavaScript Basics',
+    icon: '⚡',
+    missions: [
+      { id: 'web-3-1', title: 'Making Pages Interactive', subtitle: 'Variables, console.log, data types', xp: 50, playable: true },
+      { id: 'web-3-2', title: 'DOM Manipulation', subtitle: 'querySelector, textContent, style, classList', xp: 60, playable: true },
+      { id: 'web-3-3', title: 'Events & Listeners', subtitle: 'addEventListener, click, submit, keydown', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Putting It Together',
+    icon: '🔧',
+    missions: [
+      { id: 'web-4-1', title: 'Responsive Design', subtitle: 'Media queries, viewport, relative units', xp: 60, playable: true },
+      { id: 'web-4-2', title: 'CSS Frameworks', subtitle: 'Tailwind CSS, Bootstrap — build faster', xp: 60, playable: true },
+      { id: 'web-4-3', title: 'Fetch & APIs', subtitle: 'fetch(), async/await, JSON — talk to servers', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Real World Web Dev',
+    icon: '🚀',
+    missions: [
+      { id: 'web-5-1', title: 'Developer Tools', subtitle: 'Chrome DevTools — inspect, debug, test', xp: 60, playable: true },
+      { id: 'web-5-2', title: 'Deployment', subtitle: 'GitHub Pages, Netlify, Vercel — go live', xp: 70, playable: true },
+      { id: 'web-5-3', title: 'Build a Website', subtitle: 'Full project — personal portfolio with HTML+CSS+JS', xp: 100, playable: true },
+    ],
+  },
+];
+
 export const paths: Path[] = [
   {
     id: 'networking',
@@ -318,8 +371,7 @@ export const paths: Path[] = [
     title: 'Web Dev',
     icon: '🕸️',
     description: 'HTML, CSS, JS — build for the web',
-    chapters: [],
-    comingSoon: true,
+    chapters: webdevChapters,
   },
   {
     id: 'cybersecurity',

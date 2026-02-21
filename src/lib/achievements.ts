@@ -46,4 +46,13 @@ export const achievements: Achievement[] = [
   { id: 'function-factory', title: 'Function Factory', description: 'Write 5 functions', icon: '🏭' },
   { id: 'bug-squasher', title: 'Bug Squasher', description: 'Fix broken code with try/except', icon: '🐛' },
   { id: 'api-explorer', title: 'API Explorer', description: 'Query a simulated API', icon: '🌐' },
+
+  // Web Dev
+  { id: 'web-weaver', title: 'Web Weaver', description: 'Complete first Web Dev mission', icon: '🕸️' },
+  { id: 'semantic-scholar', title: 'Semantic Scholar', description: 'Use all semantic HTML tags', icon: '📐' },
+  { id: 'style-master', title: 'Style Master', description: 'Complete all CSS missions', icon: '🎨' },
+  { id: 'flex-lord', title: 'Flex Lord', description: 'Master flexbox layout', icon: '📦' },
+  { id: 'dom-wizard', title: 'DOM Wizard', description: 'Manipulate the DOM with JavaScript', icon: '🧙' },
+  { id: 'full-stack-starter', title: 'Full Stack Starter', description: 'Complete the Web Dev path', icon: '🏆' },
+  { id: 'deployed', title: 'Deployed!', description: 'Learn about deployment', icon: '🚀' },
 ];
