@@ -37,4 +37,13 @@ export const achievements: Achievement[] = [
   { id: 'log-detective', title: 'Log Detective', description: 'Find an error in system logs', icon: '🔍' },
   { id: 'cron-master', title: 'Cron Master', description: 'Write a correct cron expression', icon: '⏰' },
   { id: 'disk-doctor', title: 'Disk Doctor', description: 'Analyze disk usage', icon: '💾' },
+
+  // Python
+  { id: 'pythonista', title: 'Pythonista', description: 'Complete your first Python mission', icon: '🐍' },
+  { id: 'hello-world', title: 'Hello World!', description: 'Print hello world in Python', icon: '👋' },
+  { id: 'loop-master', title: 'Loop Master', description: 'Complete all loop missions', icon: '🔄' },
+  { id: 'data-wrangler', title: 'Data Wrangler', description: 'Work with lists, dicts, and sets', icon: '📊' },
+  { id: 'function-factory', title: 'Function Factory', description: 'Write 5 functions', icon: '🏭' },
+  { id: 'bug-squasher', title: 'Bug Squasher', description: 'Fix broken code with try/except', icon: '🐛' },
+  { id: 'api-explorer', title: 'API Explorer', description: 'Query a simulated API', icon: '🌐' },
 ];

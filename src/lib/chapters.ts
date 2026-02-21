@@ -231,6 +231,59 @@ const linuxChapters: Chapter[] = [
   },
 ];
 
+const pythonChapters: Chapter[] = [
+  {
+    id: 1,
+    title: 'Python Basics',
+    icon: '🐍',
+    missions: [
+      { id: 'py-1-1', title: 'Hello Python!', subtitle: 'What is Python and your first print()', xp: 40, playable: true },
+      { id: 'py-1-2', title: 'Variables & Data Types', subtitle: 'Strings, ints, floats, booleans, type()', xp: 50, playable: true },
+      { id: 'py-1-3', title: 'Input & Output', subtitle: 'print(), input(), f-strings', xp: 50, playable: true },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Control Flow',
+    icon: '🔀',
+    missions: [
+      { id: 'py-2-1', title: 'If / Elif / Else', subtitle: 'Conditional logic and comparisons', xp: 50, playable: true },
+      { id: 'py-2-2', title: 'Loops — For', subtitle: 'for loops, range(), iteration', xp: 60, playable: true },
+      { id: 'py-2-3', title: 'Loops — While', subtitle: 'while loops, break, continue', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Data Structures',
+    icon: '📦',
+    missions: [
+      { id: 'py-3-1', title: 'Lists', subtitle: 'Create, index, slice, append, sort', xp: 60, playable: true },
+      { id: 'py-3-2', title: 'Dictionaries', subtitle: 'Key-value pairs, nested dicts', xp: 60, playable: true },
+      { id: 'py-3-3', title: 'Tuples & Sets', subtitle: 'Immutability and set operations', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Functions & Modules',
+    icon: '⚙️',
+    missions: [
+      { id: 'py-4-1', title: 'Functions', subtitle: 'def, parameters, return values', xp: 60, playable: true },
+      { id: 'py-4-2', title: 'Modules & Imports', subtitle: 'import, standard library highlights', xp: 60, playable: true },
+      { id: 'py-4-3', title: 'Error Handling', subtitle: 'try/except/finally, common exceptions', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Real World Python',
+    icon: '🌍',
+    missions: [
+      { id: 'py-5-1', title: 'File I/O', subtitle: 'Reading and writing files', xp: 70, playable: true },
+      { id: 'py-5-2', title: 'APIs & Requests', subtitle: 'HTTP, JSON, querying APIs', xp: 70, playable: true },
+      { id: 'py-5-3', title: 'Build a Tool', subtitle: 'Put it all together!', xp: 100, playable: true },
+    ],
+  },
+];
+
 export const paths: Path[] = [
   {
     id: 'networking',
@@ -254,12 +307,11 @@ export const paths: Path[] = [
     chapters: linuxChapters,
   },
   {
-    id: 'coding',
-    title: 'Coding',
+    id: 'python',
+    title: 'Coding (Python)',
     icon: '🐍',
     description: 'Python fundamentals and beyond',
-    chapters: [],
-    comingSoon: true,
+    chapters: pythonChapters,
   },
   {
     id: 'webdev',

@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux'];
+const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python'];
 
 const portsData = [
   { port: 20, service: 'FTP Data', protocol: 'TCP' },
@@ -433,6 +433,207 @@ export default function Reference() {
                     <span className="text-gray-500">— {c.desc}</span>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === 7 && (
+          <div className="space-y-4">
+            {/* Basic Syntax */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🐍 Basic Syntax</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'x = 10', desc: 'Assign a variable' },
+                  { cmd: 'print("text")', desc: 'Output to screen' },
+                  { cmd: 'input("prompt")', desc: 'Get user input (returns str)' },
+                  { cmd: 'type(x)', desc: 'Check type of a value' },
+                  { cmd: 'len(obj)', desc: 'Length of string/list/dict' },
+                  { cmd: 'int() / float() / str()', desc: 'Type conversion' },
+                  { cmd: 'f"Hello {name}"', desc: 'f-string formatting' },
+                  { cmd: '# comment', desc: 'Single line comment' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Data Types */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📊 Data Types</h3>
+              <div className="font-mono text-xs space-y-1">
+                {[
+                  { type: 'str', ex: '"hello"', desc: 'Text' },
+                  { type: 'int', ex: '42', desc: 'Whole number' },
+                  { type: 'float', ex: '3.14', desc: 'Decimal number' },
+                  { type: 'bool', ex: 'True / False', desc: 'Boolean' },
+                  { type: 'list', ex: '[1, 2, 3]', desc: 'Ordered, mutable' },
+                  { type: 'tuple', ex: '(1, 2, 3)', desc: 'Ordered, immutable' },
+                  { type: 'dict', ex: '{"k": "v"}', desc: 'Key-value pairs' },
+                  { type: 'set', ex: '{1, 2, 3}', desc: 'Unique items' },
+                  { type: 'None', ex: 'None', desc: 'Nothing' },
+                ].map(t => (
+                  <div key={t.type} className="flex justify-between py-0.5 border-b border-gray-800/30">
+                    <span style={{ color: '#00f0ff' }}>{t.type}</span>
+                    <span className="text-gray-400">{t.ex}</span>
+                    <span className="text-gray-500">{t.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* List/Dict/Set Methods */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📋 Common Methods</h3>
+              <div className="space-y-2 text-xs">
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#00f0ff' }}>List</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>.append(x) .insert(i,x) .remove(x) .pop()</div>
+                    <div>.sort() .reverse() .index(x) .count(x)</div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#39ff14' }}>Dict</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>.keys() .values() .items() .get(k, default)</div>
+                    <div>.pop(k) .update(other) .setdefault(k, v)</div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#ff9500' }}>String</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>.upper() .lower() .strip() .split(sep)</div>
+                    <div>.replace(old,new) .startswith() .endswith()</div>
+                    <div>.join(list) .find(sub) .format()</div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1 text-purple-400">Set</p>
+                  <div className="font-mono text-gray-400 space-y-0.5">
+                    <div>.add(x) .remove(x) .discard(x)</div>
+                    <div>| union  & intersect  - difference  ^ symmetric</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Control Flow */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔀 Control Flow</h3>
+              <pre className="font-mono text-xs text-gray-300">{`# If/elif/else
+if condition:
+    ...
+elif other:
+    ...
+else:
+    ...
+
+# For loop
+for item in iterable:
+    ...
+for i in range(n):
+    ...
+
+# While loop
+while condition:
+    ...
+    break     # exit loop
+    continue  # skip to next`}</pre>
+            </div>
+
+            {/* Functions */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">⚙️ Functions</h3>
+              <pre className="font-mono text-xs text-gray-300">{`def func_name(param1, param2="default"):
+    """Docstring"""
+    return result
+
+# Lambda (one-liner)
+square = lambda x: x ** 2
+
+# *args and **kwargs
+def flex(*args, **kwargs):
+    print(args)    # tuple
+    print(kwargs)  # dict`}</pre>
+            </div>
+
+            {/* Modules */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📦 Common Modules</h3>
+              <div className="space-y-1">
+                {[
+                  { mod: 'random', desc: 'randint, choice, shuffle, random' },
+                  { mod: 'math', desc: 'sqrt, pi, sin, cos, floor, ceil' },
+                  { mod: 'datetime', desc: 'date, time, datetime, timedelta' },
+                  { mod: 'json', desc: 'loads, dumps — parse/create JSON' },
+                  { mod: 'os', desc: 'path, listdir, mkdir, environ' },
+                  { mod: 'sys', desc: 'argv, exit, path, stdin/stdout' },
+                  { mod: 'csv', desc: 'reader, writer — CSV files' },
+                  { mod: 're', desc: 'search, match, findall — regex' },
+                  { mod: 'requests*', desc: 'get, post — HTTP (pip install)' },
+                ].map(m => (
+                  <div key={m.mod} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{m.mod}</span>
+                    <span className="text-gray-500">— {m.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Error Types */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🐛 Common Errors</h3>
+              <div className="space-y-1">
+                {[
+                  { err: 'SyntaxError', desc: 'Invalid Python syntax' },
+                  { err: 'NameError', desc: 'Variable not defined' },
+                  { err: 'TypeError', desc: 'Wrong type for operation' },
+                  { err: 'ValueError', desc: 'Right type, wrong value' },
+                  { err: 'IndexError', desc: 'List index out of range' },
+                  { err: 'KeyError', desc: 'Dict key not found' },
+                  { err: 'FileNotFoundError', desc: 'File doesn\'t exist' },
+                  { err: 'ZeroDivisionError', desc: 'Division by zero' },
+                  { err: 'ImportError', desc: 'Module not found' },
+                  { err: 'AttributeError', desc: 'Object has no attribute' },
+                ].map(e => (
+                  <div key={e.err} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0 text-red-400">{e.err}</span>
+                    <span className="text-gray-500">— {e.desc}</span>
+                  </div>
+                ))}
+              </div>
+              <pre className="font-mono text-xs text-gray-300 mt-2">{`try:
+    risky_code()
+except ValueError as e:
+    print(f"Error: {e}")
+finally:
+    cleanup()`}</pre>
+            </div>
+
+            {/* Operators */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔢 Operators</h3>
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                <div>
+                  <p className="font-sans font-semibold text-gray-400 mb-1">Math</p>
+                  <div className="text-gray-300 space-y-0.5">
+                    <div><span style={{ color: '#00f0ff' }}>+</span> add  <span style={{ color: '#00f0ff' }}>-</span> sub  <span style={{ color: '#00f0ff' }}>*</span> mul</div>
+                    <div><span style={{ color: '#00f0ff' }}>/</span> div  <span style={{ color: '#00f0ff' }}>//</span> floor  <span style={{ color: '#00f0ff' }}>%</span> mod</div>
+                    <div><span style={{ color: '#00f0ff' }}>**</span> power</div>
+                  </div>
+                </div>
+                <div>
+                  <p className="font-sans font-semibold text-gray-400 mb-1">Comparison</p>
+                  <div className="text-gray-300 space-y-0.5">
+                    <div><span style={{ color: '#39ff14' }}>==</span> eq  <span style={{ color: '#39ff14' }}>!=</span> not eq</div>
+                    <div><span style={{ color: '#39ff14' }}>&lt;</span> <span style={{ color: '#39ff14' }}>&gt;</span> <span style={{ color: '#39ff14' }}>&lt;=</span> <span style={{ color: '#39ff14' }}>&gt;=</span></div>
+                    <div><span style={{ color: '#39ff14' }}>in</span> <span style={{ color: '#39ff14' }}>not in</span> <span style={{ color: '#39ff14' }}>is</span></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
