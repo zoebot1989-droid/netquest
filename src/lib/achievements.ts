@@ -55,4 +55,13 @@ export const achievements: Achievement[] = [
   { id: 'dom-wizard', title: 'DOM Wizard', description: 'Manipulate the DOM with JavaScript', icon: '🧙' },
   { id: 'full-stack-starter', title: 'Full Stack Starter', description: 'Complete the Web Dev path', icon: '🏆' },
   { id: 'deployed', title: 'Deployed!', description: 'Learn about deployment', icon: '🚀' },
+
+  // DevOps
+  { id: 'git-gud', title: 'Git Gud', description: 'Complete first Git mission', icon: '📝' },
+  { id: 'branch-manager', title: 'Branch Manager', description: 'Create and merge a branch', icon: '🌿' },
+  { id: 'container-captain', title: 'Container Captain', description: 'Run first Docker container', icon: '🐳' },
+  { id: 'dockerfile-author', title: 'Dockerfile Author', description: 'Write a Dockerfile', icon: '📄' },
+  { id: 'pipeline-pro', title: 'Pipeline Pro', description: 'Build a CI/CD pipeline', icon: '🔄' },
+  { id: 'cloud-native', title: 'Cloud Native', description: 'Learn about cloud providers', icon: '☁️' },
+  { id: 'full-devops', title: 'Full DevOps', description: 'Complete the DevOps path', icon: '🏆' },
 ];

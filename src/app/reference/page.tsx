@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python', 'Web Dev'];
+const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python', 'Web Dev', 'DevOps'];
 
 const portsData = [
   { port: 20, service: 'FTP Data', protocol: 'TCP' },
@@ -836,6 +836,196 @@ async function getData() {
                   <div key={b.bp} className="flex gap-2">
                     <span style={{ color: '#00f0ff' }}>@media (min-width: {b.bp})</span>
                     <span className="text-gray-500">— {b.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === 9 && (
+          <div className="space-y-4">
+            {/* Git Commands */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📝 Git Commands</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'git init', desc: 'Create new Git repository' },
+                  { cmd: 'git add <file>', desc: 'Stage file for commit' },
+                  { cmd: 'git add .', desc: 'Stage all changes' },
+                  { cmd: 'git commit -m "msg"', desc: 'Save staged changes' },
+                  { cmd: 'git status', desc: 'Show working tree status' },
+                  { cmd: 'git log', desc: 'Show commit history' },
+                  { cmd: 'git diff', desc: 'Show unstaged changes' },
+                  { cmd: 'git branch <name>', desc: 'Create new branch' },
+                  { cmd: 'git checkout -b <name>', desc: 'Create and switch branch' },
+                  { cmd: 'git merge <branch>', desc: 'Merge branch into current' },
+                  { cmd: 'git clone <url>', desc: 'Download remote repo' },
+                  { cmd: 'git push', desc: 'Upload commits to remote' },
+                  { cmd: 'git pull', desc: 'Download and merge remote changes' },
+                  { cmd: 'git remote -v', desc: 'List remote connections' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Docker Commands */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🐳 Docker Commands</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'docker run <image>', desc: 'Run a container' },
+                  { cmd: 'docker run -d -p 80:80 nginx', desc: 'Run detached with port mapping' },
+                  { cmd: 'docker ps', desc: 'List running containers' },
+                  { cmd: 'docker ps -a', desc: 'List all containers' },
+                  { cmd: 'docker images', desc: 'List downloaded images' },
+                  { cmd: 'docker pull <image>', desc: 'Download image from registry' },
+                  { cmd: 'docker stop <id>', desc: 'Stop a container' },
+                  { cmd: 'docker rm <id>', desc: 'Remove a container' },
+                  { cmd: 'docker exec -it <id> bash', desc: 'Shell into a container' },
+                  { cmd: 'docker build -t name .', desc: 'Build image from Dockerfile' },
+                  { cmd: 'docker logs <id>', desc: 'View container logs' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Dockerfile */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">📄 Dockerfile Reference</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'FROM image:tag', desc: 'Base image (required first)' },
+                  { cmd: 'WORKDIR /app', desc: 'Set working directory' },
+                  { cmd: 'COPY src dest', desc: 'Copy files into image' },
+                  { cmd: 'RUN command', desc: 'Execute during build' },
+                  { cmd: 'EXPOSE 3000', desc: 'Document port (metadata)' },
+                  { cmd: 'ENV KEY=value', desc: 'Set environment variable' },
+                  { cmd: 'CMD ["node","app.js"]', desc: 'Default run command' },
+                  { cmd: 'ENTRYPOINT ["cmd"]', desc: 'Fixed run command' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#00f0ff' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* docker-compose */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🐙 docker-compose.yml</h3>
+              <pre className="font-mono text-xs text-gray-300">{`version: "3.8"
+services:
+  web:
+    build: .           # Build from Dockerfile
+    ports: ["3000:3000"]
+    depends_on: [db]
+    environment:
+      DB_HOST: db
+  db:
+    image: postgres:15
+    volumes: [data:/var/lib/postgresql/data]
+    environment:
+      POSTGRES_PASSWORD: secret
+volumes:
+  data:`}</pre>
+              <div className="space-y-1 mt-2">
+                {[
+                  { cmd: 'docker-compose up -d', desc: 'Start all services' },
+                  { cmd: 'docker-compose down', desc: 'Stop and remove all' },
+                  { cmd: 'docker-compose ps', desc: 'List services' },
+                  { cmd: 'docker-compose logs', desc: 'View all logs' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* GitHub Actions */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">⚙️ GitHub Actions</h3>
+              <pre className="font-mono text-xs text-gray-300">{`name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm install
+      - run: npm test`}</pre>
+            </div>
+
+            {/* kubectl */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">☸️ kubectl Commands</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'kubectl get pods', desc: 'List running pods' },
+                  { cmd: 'kubectl get deployments', desc: 'List deployments' },
+                  { cmd: 'kubectl get services', desc: 'List services' },
+                  { cmd: 'kubectl apply -f file.yaml', desc: 'Apply configuration' },
+                  { cmd: 'kubectl describe pod <name>', desc: 'Detailed pod info' },
+                  { cmd: 'kubectl logs <pod>', desc: 'View pod logs' },
+                  { cmd: 'kubectl delete pod <name>', desc: 'Delete a pod' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CI/CD Stages */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔄 CI/CD Pipeline Stages</h3>
+              <div className="space-y-1 text-xs">
+                {[
+                  { stage: '📥 Source', desc: 'Code pushed to Git repo' },
+                  { stage: '🔨 Build', desc: 'Compile/bundle the application' },
+                  { stage: '🧪 Test', desc: 'Run automated test suites' },
+                  { stage: '📋 Lint', desc: 'Check code style and quality' },
+                  { stage: '📦 Package', desc: 'Build Docker image, push to registry' },
+                  { stage: '🚀 Deploy', desc: 'Deploy to staging/production' },
+                  { stage: '📊 Monitor', desc: 'Watch metrics, logs, alerts' },
+                ].map(s => (
+                  <div key={s.stage} className="flex gap-2">
+                    <span className="shrink-0" style={{ color: '#00f0ff' }}>{s.stage}</span>
+                    <span className="text-gray-500">— {s.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Terraform */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🏗️ Terraform</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'terraform init', desc: 'Initialize and download providers' },
+                  { cmd: 'terraform plan', desc: 'Preview changes' },
+                  { cmd: 'terraform apply', desc: 'Apply changes' },
+                  { cmd: 'terraform destroy', desc: 'Tear down all resources' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
                   </div>
                 ))}
               </div>

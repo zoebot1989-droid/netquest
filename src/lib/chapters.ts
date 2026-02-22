@@ -337,6 +337,59 @@ const webdevChapters: Chapter[] = [
   },
 ];
 
+const devopsChapters: Chapter[] = [
+  {
+    id: 1,
+    title: 'Version Control (Git)',
+    icon: '📝',
+    missions: [
+      { id: 'devops-1-1', title: 'Git Basics', subtitle: 'init, add, commit, status, log — track your code', xp: 50, playable: true },
+      { id: 'devops-1-2', title: 'Branching & Merging', subtitle: 'branch, checkout, merge — parallel development', xp: 60, playable: true },
+      { id: 'devops-1-3', title: 'Remote Repos', subtitle: 'push, pull, clone — collaborate with GitHub', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Docker & Containers',
+    icon: '🐳',
+    missions: [
+      { id: 'devops-2-1', title: 'What Are Containers?', subtitle: 'Containers vs VMs, images, Docker Hub', xp: 50, playable: true },
+      { id: 'devops-2-2', title: 'Docker Commands', subtitle: 'run, ps, images, stop, rm — manage containers', xp: 60, playable: true },
+      { id: 'devops-2-3', title: 'Dockerfiles', subtitle: 'FROM, COPY, RUN, CMD — build custom images', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 3,
+    title: 'CI/CD Pipelines',
+    icon: '🔄',
+    missions: [
+      { id: 'devops-3-1', title: 'What is CI/CD?', subtitle: 'Continuous Integration & Delivery explained', xp: 50, playable: true },
+      { id: 'devops-3-2', title: 'GitHub Actions', subtitle: 'Workflow YAML, triggers, jobs, steps', xp: 60, playable: true },
+      { id: 'devops-3-3', title: 'Testing & Quality', subtitle: 'Unit tests, linting, coverage, test pyramid', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Infrastructure',
+    icon: '☁️',
+    missions: [
+      { id: 'devops-4-1', title: 'Cloud Providers', subtitle: 'AWS, GCP, Azure — key services overview', xp: 50, playable: true },
+      { id: 'devops-4-2', title: 'Infrastructure as Code', subtitle: 'Terraform basics — declarative infra', xp: 60, playable: true },
+      { id: 'devops-4-3', title: 'Monitoring & Logging', subtitle: 'Prometheus, Grafana, ELK stack', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Real World DevOps',
+    icon: '🚀',
+    missions: [
+      { id: 'devops-5-1', title: 'Docker Compose', subtitle: 'Multi-container apps with docker-compose', xp: 60, playable: true },
+      { id: 'devops-5-2', title: 'Kubernetes Basics', subtitle: 'Pods, deployments, services, kubectl', xp: 70, playable: true },
+      { id: 'devops-5-3', title: 'The Full Pipeline', subtitle: 'Code → Git → CI → Docker → Deploy', xp: 100, playable: true },
+    ],
+  },
+];
+
 export const paths: Path[] = [
   {
     id: 'networking',
@@ -386,8 +439,7 @@ export const paths: Path[] = [
     title: 'DevOps',
     icon: '🐳',
     description: 'Docker, Git, CI/CD pipelines',
-    chapters: [],
-    comingSoon: true,
+    chapters: devopsChapters,
   },
   {
     id: 'hardware',

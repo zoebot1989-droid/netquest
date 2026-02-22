@@ -592,6 +592,7 @@ function runSingleCommand(state: TerminalState, cmd: string, args: string[]): { 
         '  Network: ping, ssh, scp, curl, netstat, ifconfig',
         '  Package: apt install/update/remove',
         '  Shell: echo, export, env, history, chmod, chown',
+        '  DevOps: git, docker, docker-compose, kubectl, terraform',
         '  Other: clear, help',
       );
 
@@ -993,6 +994,163 @@ function runSingleCommand(state: TerminalState, cmd: string, args: string[]): { 
         `ACCEPT  tcp   0.0.0.0/0   0.0.0.0/0   tcp dpt:80`,
         `DROP    all   0.0.0.0/0   0.0.0.0/0`,
       );
+
+    case 'git': {
+      const sub = args[0];
+      if (!sub) return out('usage: git <command> [<args>]', '', 'Common commands:', '   init       Create an empty Git repository', '   add        Add file contents to the index', '   commit     Record changes to the repository', '   status     Show the working tree status', '   log        Show commit logs', '   branch     List, create, or delete branches', '   checkout   Switch branches', '   merge      Join two branches', '   remote     Manage remotes', '   push       Update remote refs', '   pull       Fetch and merge from remote', '   clone      Clone a repository', '   diff       Show changes between commits');
+      if (sub === 'init') return out('Initialized empty Git repository in ' + state.cwd + '/.git/');
+      if (sub === 'add') {
+        const target = args[1] || '.';
+        return out(`Added ${target === '.' ? 'all files' : `'${target}'`} to staging area`);
+      }
+      if (sub === 'commit') {
+        const msgIdx = args.indexOf('-m');
+        const msg = msgIdx >= 0 ? args[msgIdx + 1] || 'update' : 'update';
+        const hash = Math.random().toString(16).slice(2, 9);
+        return out(`[main ${hash}] ${msg}`, ' 3 files changed, 42 insertions(+), 7 deletions(-)');
+      }
+      if (sub === 'status') return out('On branch main', '', 'Changes not staged for commit:', '  (use "git add <file>..." to update what will be committed)', '', '\tmodified:   index.html', '\tmodified:   style.css', '', 'Untracked files:', '\tnew-feature.js', '', 'no changes added to commit (use "git add")');
+      if (sub === 'log') return out(
+        'commit a1b2c3d (HEAD -> main)', 'Author: user <user@example.com>', 'Date:   Sat Feb 21 12:00:00 2026', '', '    Add navigation bar', '',
+        'commit e4f5a6b', 'Author: user <user@example.com>', 'Date:   Fri Feb 20 15:30:00 2026', '', '    Initial commit'
+      );
+      if (sub === 'branch') {
+        if (args.length === 1) return out('* main', '  feature/login', '  bugfix/header');
+        return out(`Created branch '${args[1]}'`);
+      }
+      if (sub === 'checkout' || sub === 'switch') {
+        const branch = args.includes('-b') ? args[args.indexOf('-b') + 1] : args[1];
+        if (!branch) return out('error: please specify a branch');
+        if (args.includes('-b')) return out(`Switched to a new branch '${branch}'`);
+        return out(`Switched to branch '${branch}'`);
+      }
+      if (sub === 'merge') {
+        const branch = args[1];
+        if (!branch) return out('error: please specify a branch to merge');
+        return out(`Merge made by the 'ort' strategy.`, ` src/login.js | 45 +++++++++++++++`, ` 1 file changed, 45 insertions(+)`, ` create mode 100644 src/login.js`);
+      }
+      if (sub === 'remote') {
+        if (args[1] === 'add') return out(`Remote '${args[2] || 'origin'}' added → ${args[3] || 'https://github.com/user/repo.git'}`);
+        if (args[1] === '-v') return out('origin\thttps://github.com/user/repo.git (fetch)', 'origin\thttps://github.com/user/repo.git (push)');
+        return out('origin');
+      }
+      if (sub === 'push') return out('Enumerating objects: 5, done.', 'Counting objects: 100% (5/5), done.', 'Delta compression using up to 8 threads', 'Writing objects: 100% (3/3), 320 bytes | 320.00 KiB/s, done.', `To https://github.com/user/repo.git`, `   e4f5a6b..a1b2c3d  main -> main`);
+      if (sub === 'pull') return out('remote: Enumerating objects: 3, done.', 'remote: Counting objects: 100% (3/3), done.', 'Unpacking objects: 100% (3/3), done.', 'From https://github.com/user/repo.git', '   a1b2c3d..f7e8d9c  main -> origin/main', 'Updating a1b2c3d..f7e8d9c', 'Fast-forward', ' README.md | 5 +++++', ' 1 file changed, 5 insertions(+)');
+      if (sub === 'clone') {
+        const repo = args[1] || 'https://github.com/user/repo.git';
+        const name = repo.split('/').pop()?.replace('.git', '') || 'repo';
+        return out(`Cloning into '${name}'...`, 'remote: Enumerating objects: 42, done.', 'remote: Total 42 (delta 0), reused 0 (delta 0)', `Receiving objects: 100% (42/42), 12.5 KiB | 6.25 MiB/s, done.`);
+      }
+      if (sub === 'diff') return out('\x1b[1mdiff --git a/index.html b/index.html\x1b[0m', '--- a/index.html', '+++ b/index.html', '@@ -1,4 +1,5 @@', ' <html>', '   <head>', '+    <title>My Site</title>', '   </head>', '   <body>');
+      return out(`git: '${sub}' is not a git command.`);
+    }
+
+    case 'docker': {
+      const sub = args[0];
+      if (!sub) return out('Usage: docker <command>', '', 'Commands:', '  run       Create and run a container', '  ps        List containers', '  images    List images', '  stop      Stop a container', '  rm        Remove a container', '  pull      Download an image', '  exec      Run command in container', '  build     Build an image from Dockerfile', '  logs      View container logs');
+      if (sub === 'run') {
+        const image = args.find(a => !a.startsWith('-')) || 'nginx';
+        const detach = args.includes('-d');
+        const id = Math.random().toString(16).slice(2, 14);
+        if (image === 'hello-world' || args.includes('hello-world')) {
+          return out('Unable to find image \'hello-world:latest\' locally', 'latest: Pulling from library/hello-world', 'Digest: sha256:2498fce14358aa50ead0cc6c19990fc6ff866ce72aeb5546e1d59caac3d0d60f', 'Status: Downloaded newer image for hello-world:latest', '', 'Hello from Docker!', 'This message shows that your installation appears to be working correctly.', '', 'To generate this message, Docker took the following steps:', ' 1. The Docker client contacted the Docker daemon.', ' 2. The daemon pulled the "hello-world" image from Docker Hub.', ' 3. The daemon created a new container from that image.', ' 4. The daemon streamed output to the Docker client.');
+        }
+        if (detach) return out(id);
+        return out(`Container ${id.slice(0, 12)} started from image '${image}'`, 'Listening on port 80...');
+      }
+      if (sub === 'ps') {
+        const all = args.includes('-a');
+        const lines = ['CONTAINER ID   IMAGE     COMMAND       STATUS          PORTS                  NAMES',
+          'a1b2c3d4e5f6   nginx     "/docker-…"   Up 2 hours      0.0.0.0:80->80/tcp     web-server',
+          'f6e5d4c3b2a1   redis     "redis-se…"   Up 2 hours      0.0.0.0:6379->6379     cache'];
+        if (all) lines.push('deadbeef1234   node      "npm start"   Exited (0) 1h ago                            old-app');
+        return out(...lines);
+      }
+      if (sub === 'images') return out('REPOSITORY   TAG       IMAGE ID       CREATED        SIZE', 'nginx        latest    a1b2c3d4e5f6   2 weeks ago    187MB', 'redis        7         b2c3d4e5f6a1   3 weeks ago    138MB', 'node         20        c3d4e5f6a1b2   1 month ago    1.1GB', 'python       3.11      d4e5f6a1b2c3   1 month ago    1.01GB');
+      if (sub === 'stop') {
+        const id = args[1] || 'container';
+        return out(id);
+      }
+      if (sub === 'rm') {
+        const id = args[1] || 'container';
+        return out(id);
+      }
+      if (sub === 'pull') {
+        const image = args[1] || 'nginx';
+        return out(`Using default tag: latest`, `latest: Pulling from library/${image}`, 'a2abf6c4d29d: Pull complete', '878a5e1b7a23: Pull complete', 'Digest: sha256:abc123def456', `Status: Downloaded newer image for ${image}:latest`, `docker.io/library/${image}:latest`);
+      }
+      if (sub === 'exec') {
+        const container = args.find(a => !a.startsWith('-') && a !== 'exec') || 'container';
+        const cmd2 = args.slice(args.indexOf(container) + 1).join(' ') || 'bash';
+        if (cmd2.includes('ls')) return out('app  bin  etc  home  lib  proc  root  tmp  usr  var');
+        if (cmd2.includes('bash') || cmd2.includes('sh')) return out(`root@${container.slice(0, 12)}:/# `);
+        return out(`Executing '${cmd2}' in container ${container}`);
+      }
+      if (sub === 'build') {
+        const tag = args.includes('-t') ? args[args.indexOf('-t') + 1] || 'myapp' : 'myapp';
+        return out(`[+] Building ${tag}`, ' => [1/5] FROM docker.io/library/node:20', ' => [2/5] WORKDIR /app', ' => [3/5] COPY package*.json ./', ' => [4/5] RUN npm install', ' => [5/5] COPY . .', `Successfully built ${tag}`, `Successfully tagged ${tag}:latest`);
+      }
+      if (sub === 'logs') {
+        const container = args[1] || 'web-server';
+        return out(`[${container}] 2026-02-21 12:00:01 - GET /index.html 200 OK`, `[${container}] 2026-02-21 12:00:05 - GET /api/data 200 OK`, `[${container}] 2026-02-21 12:01:12 - POST /api/login 401 Unauthorized`, `[${container}] 2026-02-21 12:01:30 - POST /api/login 200 OK`);
+      }
+      return out(`docker: '${sub}' is not a docker command.`);
+    }
+
+    case 'docker-compose': {
+      const sub = args[0];
+      if (!sub) return out('Usage: docker-compose <command>', '', 'Commands:', '  up      Create and start containers', '  down    Stop and remove containers', '  ps      List containers', '  logs    View container logs');
+      if (sub === 'up') {
+        const detach = args.includes('-d');
+        return out('Creating network "myapp_default" with the default driver', 'Creating myapp_db_1   ... done', 'Creating myapp_redis_1 ... done', 'Creating myapp_web_1   ... done', ...(detach ? [] : ['Attaching to myapp_web_1, myapp_db_1, myapp_redis_1', 'web_1   | Server running on port 3000', 'db_1    | PostgreSQL ready on port 5432', 'redis_1 | Redis ready on port 6379']));
+      }
+      if (sub === 'down') return out('Stopping myapp_web_1   ... done', 'Stopping myapp_redis_1 ... done', 'Stopping myapp_db_1    ... done', 'Removing myapp_web_1   ... done', 'Removing myapp_redis_1 ... done', 'Removing myapp_db_1    ... done', 'Removing network myapp_default');
+      if (sub === 'ps') return out('      Name              Command          State           Ports', '-----------------------------------------------------------------------', 'myapp_db_1      docker-entrypoint.sh   Up      0.0.0.0:5432->5432/tcp', 'myapp_redis_1   redis-server           Up      0.0.0.0:6379->6379/tcp', 'myapp_web_1     npm start              Up      0.0.0.0:3000->3000/tcp');
+      if (sub === 'logs') return out('web_1   | [2026-02-21] Server started on port 3000', 'db_1    | [2026-02-21] PostgreSQL database ready', 'redis_1 | [2026-02-21] Redis ready to accept connections', 'web_1   | [2026-02-21] GET / 200 OK');
+      return out(`docker-compose: '${sub}' is not a command.`);
+    }
+
+    case 'kubectl': {
+      const sub = args[0];
+      if (!sub) return out('Usage: kubectl <command> [resource]', '', 'Commands: get, apply, describe, logs, delete');
+      if (sub === 'get') {
+        const resource = args[1];
+        if (resource === 'pods' || resource === 'pod') return out('NAME                        READY   STATUS    RESTARTS   AGE', 'web-app-5d8f9b7c4-x2k9j    1/1     Running   0          2h', 'web-app-5d8f9b7c4-m3n7p    1/1     Running   0          2h', 'redis-master-0              1/1     Running   0          5h', 'postgres-6b8c9d4e5f-q1w2   1/1     Running   0          5h');
+        if (resource === 'deployments' || resource === 'deploy') return out('NAME         READY   UP-TO-DATE   AVAILABLE   AGE', 'web-app      2/2     2            2           2h', 'redis        1/1     1            1           5h', 'postgres     1/1     1            1           5h');
+        if (resource === 'services' || resource === 'svc') return out('NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE', 'kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        7d', 'web-app      LoadBalancer   10.96.45.123    203.0.113.5   80:30080/TCP   2h', 'redis        ClusterIP      10.96.78.234    <none>        6379/TCP       5h', 'postgres     ClusterIP      10.96.12.345    <none>        5432/TCP       5h');
+        if (resource === 'nodes') return out('NAME           STATUS   ROLES           AGE   VERSION', 'node-1         Ready    control-plane   7d    v1.28.0', 'node-2         Ready    <none>          7d    v1.28.0', 'node-3         Ready    <none>          7d    v1.28.0');
+        return out(`error: the server doesn't have a resource type "${resource || ''}"`);
+      }
+      if (sub === 'apply') {
+        const file = args.includes('-f') ? args[args.indexOf('-f') + 1] || 'config.yaml' : 'config.yaml';
+        return out(`deployment.apps/web-app configured`, `service/web-app configured`);
+      }
+      if (sub === 'describe') {
+        const resource = args[1] || 'pod';
+        const name = args[2] || 'web-app-5d8f9b7c4-x2k9j';
+        return out(`Name:         ${name}`, `Namespace:    default`, `Node:         node-2`, `Status:       Running`, `IP:           10.244.1.5`, `Containers:`, `  web-app:`, `    Image:        myapp:latest`, `    Port:         3000/TCP`, `    State:        Running`, `    Ready:        True`, `    Restart Count: 0`);
+      }
+      if (sub === 'logs') {
+        const pod = args[1] || 'web-app-5d8f9b7c4-x2k9j';
+        return out(`[${pod}] 2026-02-21T12:00:00Z Server started on port 3000`, `[${pod}] 2026-02-21T12:00:05Z Connected to database`, `[${pod}] 2026-02-21T12:01:00Z GET / 200 OK 12ms`, `[${pod}] 2026-02-21T12:01:15Z GET /api/health 200 OK 2ms`);
+      }
+      if (sub === 'delete') {
+        const resource = args[1] || 'pod';
+        const name = args[2] || 'web-app';
+        return out(`${resource} "${name}" deleted`);
+      }
+      return out(`kubectl: unknown command "${sub}"`);
+    }
+
+    case 'terraform': {
+      const sub = args[0];
+      if (!sub) return out('Usage: terraform <command>', '', 'Commands: init, plan, apply, destroy');
+      if (sub === 'init') return out('Initializing the backend...', 'Initializing provider plugins...', '- Finding hashicorp/aws versions matching "~> 5.0"...', '- Installing hashicorp/aws v5.31.0...', '- Installed hashicorp/aws v5.31.0 (signed by HashiCorp)', '', 'Terraform has been successfully initialized!');
+      if (sub === 'plan') return out('Terraform will perform the following actions:', '', '  # aws_instance.web will be created', '  + resource "aws_instance" "web" {', '      + ami           = "ami-0c55b159cbfafe1f0"', '      + instance_type = "t2.micro"', '      + tags = {', '          + "Name" = "web-server"', '        }', '    }', '', 'Plan: 1 to add, 0 to change, 0 to destroy.');
+      if (sub === 'apply') return out('aws_instance.web: Creating...', 'aws_instance.web: Still creating... [10s elapsed]', 'aws_instance.web: Creation complete after 30s [id=i-0abc123def456]', '', 'Apply complete! Resources: 1 added, 0 changed, 0 destroyed.', '', 'Outputs:', '  public_ip = "54.123.45.67"');
+      if (sub === 'destroy') return out('aws_instance.web: Destroying... [id=i-0abc123def456]', 'aws_instance.web: Destruction complete after 30s', '', 'Destroy complete! Resources: 1 destroyed.');
+      return out(`terraform: unknown command "${sub}"`);
+    }
 
     default:
       return out(`command not found: ${cmd}. Type "help" for available commands.`);
