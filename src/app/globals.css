@@ -17,6 +17,18 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Safe area for phones with gesture nav / notches */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Ensure content isn't hidden behind bottom nav */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--text);

@@ -3,8 +3,8 @@ import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 
 export const metadata: Metadata = {
-  title: "NetQuest — Learn Networking",
-  description: "A gamified networking/IT learning game",
+  title: "NetQuest — Learn IT & Cybersecurity",
+  description: "Master networking, Linux, Python, cybersecurity and more through 126 interactive missions. From IP basics to white hat hacking.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -30,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           __html: `if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}`
         }} />
       </head>
-      <body className="pb-20">
+      <body className="pb-24">
         <main className="max-w-lg mx-auto px-4 pt-4">
           {children}
         </main>
