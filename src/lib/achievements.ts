@@ -73,4 +73,17 @@ export const achievements: Achievement[] = [
   { id: 'first-boot', title: 'First Boot', description: 'Configure BIOS settings', icon: '⚡' },
   { id: 'server-admin', title: 'Server Admin', description: 'Learn about server hardware', icon: '🏗️' },
   { id: 'home-lab-hero', title: 'Home Lab Hero', description: 'Plan a home lab', icon: '🏠' },
+
+  // Cybersecurity
+  { id: 'white-hat', title: 'White Hat', description: 'Complete first Cybersecurity mission', icon: '🎩' },
+  { id: 'osint-detective', title: 'OSINT Detective', description: 'Complete all recon missions', icon: '🕵️' },
+  { id: 'sql-injector', title: 'SQL Injector', description: 'Successfully exploit SQL injection', icon: '💉' },
+  { id: 'xss-hunter', title: 'XSS Hunter', description: 'Find and exploit XSS', icon: '🎯' },
+  { id: 'hash-cracker', title: 'Hash Cracker', description: 'Crack a password hash', icon: '🔓' },
+  { id: 'packet-sniffer', title: 'Packet Sniffer', description: 'Analyze network packets', icon: '📡' },
+  { id: 'firewall-master', title: 'Firewall Guardian', description: 'Write defensive firewall rules', icon: '🧱' },
+  { id: 'incident-commander', title: 'Incident Commander', description: 'Complete incident response', icon: '🚨' },
+  { id: 'ctf-champion', title: 'CTF Champion', description: 'Solve all CTF challenges', icon: '🏆' },
+  { id: 'pentester', title: 'Pentester', description: 'Complete pentest methodology', icon: '🔬' },
+  { id: 'cyber-complete', title: 'Cyber Complete', description: 'Complete the entire Cybersecurity path', icon: '🔐' },
 ];

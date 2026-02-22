@@ -443,6 +443,69 @@ const hardwareChapters: Chapter[] = [
   },
 ];
 
+const cybersecurityChapters: Chapter[] = [
+  {
+    id: 1,
+    title: 'Foundations of Security',
+    icon: '🛡️',
+    missions: [
+      { id: 'sec-1-1', title: 'The Hacker Mindset', subtitle: 'White hat vs black hat, ethics, the CIA triad', xp: 50, playable: true },
+      { id: 'sec-1-2', title: 'Attack Surface & Threat Modeling', subtitle: 'Threat actors, STRIDE model, attack vectors', xp: 60, playable: true },
+      { id: 'sec-1-3', title: 'Cryptography Basics', subtitle: 'Encryption, hashing, AES, RSA, public/private keys', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Reconnaissance & OSINT',
+    icon: '🔍',
+    missions: [
+      { id: 'sec-2-1', title: 'Passive Recon', subtitle: 'OSINT, Google dorking, WHOIS, DNS lookups', xp: 60, playable: true },
+      { id: 'sec-2-2', title: 'Active Recon', subtitle: 'Port scanning with Nmap, service detection', xp: 70, playable: true },
+      { id: 'sec-2-3', title: 'Vulnerability Scanning', subtitle: 'CVEs, CVSS scores, scan reports', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Web Application Attacks',
+    icon: '💉',
+    missions: [
+      { id: 'sec-3-1', title: 'SQL Injection', subtitle: 'Exploit a login form, bypass authentication', xp: 80, playable: true },
+      { id: 'sec-3-2', title: 'Cross-Site Scripting (XSS)', subtitle: 'Inject scripts, steal cookies', xp: 80, playable: true },
+      { id: 'sec-3-3', title: 'CSRF & Other Web Attacks', subtitle: 'CSRF, directory traversal, IDOR', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 4,
+    title: 'System & Network Attacks',
+    icon: '⚔️',
+    missions: [
+      { id: 'sec-4-1', title: 'Password Cracking', subtitle: 'Brute force, rainbow tables, hash cracking', xp: 80, playable: true },
+      { id: 'sec-4-2', title: 'Network Attacks', subtitle: 'MITM, ARP spoofing, packet sniffing', xp: 80, playable: true },
+      { id: 'sec-4-3', title: 'Wireless Security', subtitle: 'WEP/WPA/WPA3, evil twin, deauth attacks', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Defense & Hardening',
+    icon: '🏰',
+    missions: [
+      { id: 'sec-5-1', title: 'Firewalls & IDS/IPS', subtitle: 'iptables rules, Snort, Suricata', xp: 70, playable: true },
+      { id: 'sec-5-2', title: 'Server Hardening', subtitle: 'SSH keys, fail2ban, least privilege', xp: 70, playable: true },
+      { id: 'sec-5-3', title: 'Incident Response', subtitle: 'Identify, contain, eradicate, recover', xp: 80, playable: true },
+    ],
+  },
+  {
+    id: 6,
+    title: 'Real World Hacking',
+    icon: '🏴‍☠️',
+    missions: [
+      { id: 'sec-6-1', title: 'Capture the Flag (CTF)', subtitle: 'Solve hacking challenges, find flags', xp: 100, playable: true },
+      { id: 'sec-6-2', title: 'Penetration Testing', subtitle: 'Full pentest methodology', xp: 100, playable: true },
+      { id: 'sec-6-3', title: 'Building Your Hacking Lab', subtitle: 'Kali Linux, VMs, practice environment', xp: 100, playable: true },
+    ],
+  },
+];
+
 export const paths: Path[] = [
   {
     id: 'networking',
@@ -483,9 +546,8 @@ export const paths: Path[] = [
     id: 'cybersecurity',
     title: 'Cybersecurity',
     icon: '🔐',
-    description: 'Encryption, hacking, defense',
-    chapters: [],
-    comingSoon: true,
+    description: 'White hat hacking, pentesting, defense',
+    chapters: cybersecurityChapters,
   },
   {
     id: 'devops',

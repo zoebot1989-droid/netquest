@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python', 'Web Dev', 'DevOps', 'Hardware'];
+const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python', 'Web Dev', 'DevOps', 'Hardware', 'Security'];
 
 const portsData = [
   { port: 20, service: 'FTP Data', protocol: 'TCP' },
@@ -1202,6 +1202,226 @@ jobs:
                   '☐ OS installed and drivers updated',
                 ].map(item => (
                   <div key={item} className="text-gray-300 font-mono">{item}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === 11 && (
+          <div className="space-y-4">
+            {/* Nmap Cheat Sheet */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔍 Nmap Cheat Sheet</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'nmap <target>', desc: 'Basic scan (top 1000 ports)' },
+                  { cmd: 'nmap -sS <target>', desc: 'SYN stealth scan (half-open, harder to detect)' },
+                  { cmd: 'nmap -sV <target>', desc: 'Version detection (identify services)' },
+                  { cmd: 'nmap -O <target>', desc: 'OS fingerprinting' },
+                  { cmd: 'nmap -A <target>', desc: 'Aggressive (OS + version + scripts + traceroute)' },
+                  { cmd: 'nmap -p 1-65535 <target>', desc: 'Scan all ports' },
+                  { cmd: 'nmap -p 22,80,443 <target>', desc: 'Scan specific ports' },
+                  { cmd: 'nmap -sU <target>', desc: 'UDP scan' },
+                  { cmd: 'nmap --script vuln <target>', desc: 'Run vulnerability scripts' },
+                  { cmd: 'nmap -sn 192.168.1.0/24', desc: 'Ping sweep (host discovery)' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* OWASP Top 10 */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔟 OWASP Top 10 (2021)</h3>
+              <div className="space-y-1 text-xs">
+                {[
+                  { rank: 'A01', name: 'Broken Access Control', desc: 'Users accessing unauthorized data/functions' },
+                  { rank: 'A02', name: 'Cryptographic Failures', desc: 'Weak encryption, exposed sensitive data' },
+                  { rank: 'A03', name: 'Injection', desc: 'SQLi, XSS, command injection' },
+                  { rank: 'A04', name: 'Insecure Design', desc: 'Flawed architecture, missing security controls' },
+                  { rank: 'A05', name: 'Security Misconfiguration', desc: 'Default creds, open cloud storage, verbose errors' },
+                  { rank: 'A06', name: 'Vulnerable Components', desc: 'Outdated libraries with known CVEs' },
+                  { rank: 'A07', name: 'Auth Failures', desc: 'Weak passwords, missing MFA, session issues' },
+                  { rank: 'A08', name: 'Software/Data Integrity', desc: 'Untrusted updates, insecure CI/CD' },
+                  { rank: 'A09', name: 'Logging Failures', desc: 'Missing logs, no monitoring or alerting' },
+                  { rank: 'A10', name: 'SSRF', desc: 'Server-Side Request Forgery' },
+                ].map(o => (
+                  <div key={o.rank} className="flex gap-2">
+                    <span className="font-mono shrink-0 text-red-400">{o.rank}</span>
+                    <span style={{ color: '#00f0ff' }}>{o.name}</span>
+                    <span className="text-gray-500">— {o.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* SQL Injection Payloads */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">💉 SQL Injection Payloads</h3>
+              <div className="font-mono text-xs space-y-1">
+                {[
+                  { payload: "' OR 1=1 --", desc: 'Always true, bypass login' },
+                  { payload: "' OR ''='", desc: 'Alternative always-true' },
+                  { payload: "' UNION SELECT null,null --", desc: 'Column count discovery' },
+                  { payload: "' UNION SELECT username,password FROM users --", desc: 'Extract data' },
+                  { payload: "'; DROP TABLE users; --", desc: 'Destructive (NEVER do this!)' },
+                  { payload: "1' AND SLEEP(5) --", desc: 'Time-based blind SQLi' },
+                  { payload: "admin'--", desc: 'Login bypass (comment password)' },
+                ].map(p => (
+                  <div key={p.payload} className="flex gap-2">
+                    <span className="text-red-400 shrink-0">{p.payload}</span>
+                    <span className="text-gray-500">— {p.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* XSS Payloads */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🎯 XSS Payloads</h3>
+              <div className="font-mono text-xs space-y-1 text-gray-300">
+                <div>&lt;script&gt;alert(1)&lt;/script&gt;</div>
+                <div>&lt;img src=x onerror=alert(1)&gt;</div>
+                <div>&lt;svg onload=alert(1)&gt;</div>
+                <div>&lt;body onload=alert(1)&gt;</div>
+                <div>&quot; onfocus=alert(1) autofocus=&quot;</div>
+                <div>javascript:alert(document.cookie)</div>
+              </div>
+            </div>
+
+            {/* Firewall Rules */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🧱 iptables Reference</h3>
+              <div className="space-y-1">
+                {[
+                  { cmd: 'iptables -A INPUT -p tcp --dport 22 -j ACCEPT', desc: 'Allow SSH' },
+                  { cmd: 'iptables -A INPUT -p tcp --dport 80 -j ACCEPT', desc: 'Allow HTTP' },
+                  { cmd: 'iptables -A INPUT -p tcp --dport 443 -j ACCEPT', desc: 'Allow HTTPS' },
+                  { cmd: 'iptables -A INPUT -j DROP', desc: 'Drop all other incoming' },
+                  { cmd: 'iptables -A INPUT -s 10.0.0.55 -j DROP', desc: 'Block specific IP' },
+                  { cmd: 'iptables -L -n', desc: 'List all rules' },
+                  { cmd: 'iptables -F', desc: 'Flush (clear) all rules' },
+                ].map(c => (
+                  <div key={c.cmd} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Server Hardening Checklist */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🏰 Server Hardening Checklist</h3>
+              <div className="space-y-1 text-xs">
+                {[
+                  '☐ Update system: apt update && apt upgrade',
+                  '☐ Disable root SSH login (PermitRootLogin no)',
+                  '☐ Use SSH key authentication only',
+                  '☐ Change SSH port from 22',
+                  '☐ Install and configure fail2ban',
+                  '☐ Set up firewall (iptables/ufw)',
+                  '☐ Remove unnecessary services',
+                  '☐ Enable automatic security updates',
+                  '☐ Configure log monitoring',
+                  '☐ Set up regular backups',
+                  '☐ Apply principle of least privilege',
+                  '☐ Disable unused ports',
+                ].map(item => (
+                  <div key={item} className="text-gray-300 font-mono">{item}</div>
+                ))}
+              </div>
+            </div>
+
+            {/* Pentest Methodology */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔬 Pentest Methodology</h3>
+              <div className="space-y-1 text-xs">
+                {[
+                  { phase: '1. Scope', desc: 'Define targets, rules of engagement, authorization' },
+                  { phase: '2. Recon', desc: 'OSINT, WHOIS, DNS, Google dorking' },
+                  { phase: '3. Scanning', desc: 'Nmap, Nikto, vulnerability scanners' },
+                  { phase: '4. Exploitation', desc: 'Exploit found vulnerabilities, document evidence' },
+                  { phase: '5. Post-Exploitation', desc: 'Privilege escalation, lateral movement, impact assessment' },
+                  { phase: '6. Reporting', desc: 'Executive summary, findings, CVSS, remediation' },
+                ].map(p => (
+                  <div key={p.phase} className="flex gap-2">
+                    <span className="shrink-0" style={{ color: '#ff9500' }}>{p.phase}</span>
+                    <span className="text-gray-500">— {p.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Common Ports Security */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🚪 Ports & Security Implications</h3>
+              <div className="space-y-1">
+                {[
+                  { port: '21 (FTP)', risk: 'Credentials sent in plaintext. Use SFTP instead.' },
+                  { port: '22 (SSH)', risk: 'Brute force target. Use key auth + fail2ban.' },
+                  { port: '23 (Telnet)', risk: 'Everything in plaintext. Never use. Use SSH.' },
+                  { port: '25 (SMTP)', risk: 'Email spoofing if misconfigured.' },
+                  { port: '80 (HTTP)', risk: 'Unencrypted. Use HTTPS (443).' },
+                  { port: '3306 (MySQL)', risk: 'Never expose to internet. Bind to localhost.' },
+                  { port: '3389 (RDP)', risk: 'Major brute force target. Use VPN.' },
+                  { port: '8080', risk: 'Common for admin panels. Restrict access.' },
+                ].map(p => (
+                  <div key={p.port} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#00f0ff' }}>{p.port}</span>
+                    <span className="text-gray-500">— {p.risk}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTF & Lab Resources */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🏆 CTF & Lab Resources</h3>
+              <div className="space-y-1">
+                {[
+                  { name: 'HackTheBox', desc: 'Hack real machines, ranked challenges' },
+                  { name: 'TryHackMe', desc: 'Guided learning paths, beginner-friendly' },
+                  { name: 'picoCTF', desc: 'CTF by CMU, great for beginners' },
+                  { name: 'OverTheWire', desc: 'Classic wargames (Bandit, Natas, Leviathan)' },
+                  { name: 'VulnHub', desc: 'Download vulnerable VMs to practice' },
+                  { name: 'DVWA', desc: 'Damn Vulnerable Web App for web attack practice' },
+                  { name: 'Metasploitable', desc: 'Intentionally vulnerable Linux VM' },
+                  { name: 'CTFtime.org', desc: 'Find upcoming CTF competitions' },
+                ].map(r => (
+                  <div key={r.name} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{r.name}</span>
+                    <span className="text-gray-500">— {r.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Hacking Tools */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🛠️ Essential Hacking Tools</h3>
+              <div className="space-y-1">
+                {[
+                  { tool: 'nmap', desc: 'Port scanning and network discovery' },
+                  { tool: 'Burp Suite', desc: 'Web application security testing proxy' },
+                  { tool: 'Metasploit', desc: 'Exploitation framework' },
+                  { tool: 'Wireshark', desc: 'Network packet analyzer (GUI)' },
+                  { tool: 'John the Ripper', desc: 'Password hash cracker' },
+                  { tool: 'Hashcat', desc: 'GPU-accelerated hash cracker' },
+                  { tool: 'SQLMap', desc: 'Automated SQL injection tool' },
+                  { tool: 'Nikto', desc: 'Web server vulnerability scanner' },
+                  { tool: 'Hydra', desc: 'Network login brute forcer' },
+                  { tool: 'aircrack-ng', desc: 'WiFi security auditing suite' },
+                  { tool: 'Gobuster', desc: 'Directory/file brute forcer' },
+                  { tool: 'ffuf', desc: 'Fast web fuzzer' },
+                ].map(t => (
+                  <div key={t.tool} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#ff9500' }}>{t.tool}</span>
+                    <span className="text-gray-500">— {t.desc}</span>
+                  </div>
                 ))}
               </div>
             </div>

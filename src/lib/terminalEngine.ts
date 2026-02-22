@@ -1152,6 +1152,343 @@ function runSingleCommand(state: TerminalState, cmd: string, args: string[]): { 
       return out(`terraform: unknown command "${sub}"`);
     }
 
+    // ========== CYBERSECURITY TOOLS ==========
+
+    case 'nmap': {
+      const target = args.find(a => !a.startsWith('-')) || '192.168.1.1';
+      const synScan = args.includes('-sS');
+      const versionScan = args.includes('-sV');
+      const osScan = args.includes('-O');
+      const aggressive = args.includes('-A');
+      const portRange = args.includes('-p') ? args[args.indexOf('-p') + 1] : null;
+
+      const lines = [
+        `Starting Nmap 7.94 ( https://nmap.org ) at 2026-02-21 12:00 UTC`,
+        `Nmap scan report for ${target}`,
+        `Host is up (0.0034s latency).`,
+        '',
+      ];
+
+      if (portRange) {
+        lines.push(`PORT      STATE    SERVICE       VERSION`);
+        const ports = portRange.split(',').map(p => p.trim());
+        for (const p of ports) {
+          const portNum = parseInt(p);
+          const svcMap: Record<number, [string, string]> = {
+            21: ['ftp', 'vsftpd 3.0.5'], 22: ['ssh', 'OpenSSH 8.9p1'], 25: ['smtp', 'Postfix'],
+            53: ['dns', 'BIND 9.18.1'], 80: ['http', 'Apache httpd 2.4.54'], 443: ['https', 'nginx 1.24.0'],
+            3306: ['mysql', 'MySQL 8.0.35'], 5432: ['postgresql', 'PostgreSQL 15.4'], 8080: ['http-proxy', 'Apache Tomcat 9.0.82'],
+          };
+          const [svc, ver] = svcMap[portNum] || ['unknown', ''];
+          lines.push(`${String(portNum).padEnd(5)}/${('tcp').padEnd(4)} open     ${svc.padEnd(13)} ${versionScan || aggressive ? ver : ''}`);
+        }
+      } else {
+        lines.push(`Not shown: 993 closed tcp ports`);
+        lines.push(`PORT      STATE    SERVICE       ${versionScan || aggressive ? 'VERSION' : ''}`);
+        lines.push(`22/tcp    open     ssh           ${versionScan || aggressive ? 'OpenSSH 8.9p1 Ubuntu 3ubuntu0.4' : ''}`);
+        lines.push(`80/tcp    open     http          ${versionScan || aggressive ? 'Apache httpd 2.4.54 ((Ubuntu))' : ''}`);
+        lines.push(`443/tcp   open     https         ${versionScan || aggressive ? 'nginx 1.24.0' : ''}`);
+        lines.push(`3306/tcp  open     mysql         ${versionScan || aggressive ? 'MySQL 8.0.35-0ubuntu0.22.04.1' : ''}`);
+        lines.push(`8080/tcp  open     http-proxy    ${versionScan || aggressive ? 'Apache Tomcat 9.0.82' : ''}`);
+        lines.push(`8443/tcp  filtered https-alt`);
+        lines.push(`9090/tcp  open     zeus-admin    ${versionScan || aggressive ? 'Webmin httpd' : ''}`);
+      }
+
+      if (osScan || aggressive) {
+        lines.push('', 'OS detection performed.');
+        lines.push('Running: Linux 5.X');
+        lines.push('OS details: Linux 5.15 - 5.19 (Ubuntu 22.04)');
+        lines.push('Network Distance: 2 hops');
+      }
+
+      if (synScan) {
+        lines.push('', 'SYN Stealth Scan completed — packets sent but connections not fully established.');
+        lines.push('This scan type is harder to detect in logs.');
+      }
+
+      if (aggressive) {
+        lines.push('', 'TRACEROUTE');
+        lines.push('HOP   RTT      ADDRESS');
+        lines.push('1     1.23 ms  192.168.1.1');
+        lines.push(`2     3.45 ms  ${target}`);
+      }
+
+      lines.push('', `Nmap done: 1 IP address (1 host up) scanned in 4.52 seconds`);
+      return out(...lines);
+    }
+
+    case 'whois': {
+      const domain = args[0] || 'example.com';
+      return out(
+        `% WHOIS lookup for ${domain}`,
+        '',
+        `Domain Name: ${domain.toUpperCase()}`,
+        `Registry Domain ID: 2336799_DOMAIN_COM-VRSN`,
+        `Registrar WHOIS Server: whois.registrar.com`,
+        `Registrar URL: http://www.registrar.com`,
+        `Updated Date: 2025-08-14T07:01:44Z`,
+        `Creation Date: 2005-03-15T12:00:00Z`,
+        `Registry Expiry Date: 2027-03-15T12:00:00Z`,
+        `Registrar: Example Registrar, Inc.`,
+        `Registrar IANA ID: 1234`,
+        '',
+        `Domain Status: clientTransferProhibited`,
+        '',
+        `Name Server: NS1.DNSPROVIDER.COM`,
+        `Name Server: NS2.DNSPROVIDER.COM`,
+        '',
+        `Registrant Organization: REDACTED FOR PRIVACY`,
+        `Registrant State/Province: CA`,
+        `Registrant Country: US`,
+        `Admin Email: REDACTED`,
+        `Tech Email: REDACTED`,
+        '',
+        `>>> Last update of WHOIS database: 2026-02-21T12:00:00Z <<<`,
+      );
+    }
+
+    case 'dig': {
+      const domain = args.find(a => !a.startsWith('-') && !a.startsWith('+')) || 'example.com';
+      const recordType = args.find(a => ['A', 'MX', 'NS', 'TXT', 'AAAA', 'CNAME', 'SOA'].includes(a.toUpperCase()))?.toUpperCase() || 'A';
+      const ips: Record<string, string> = { 'google.com': '142.250.80.46', 'github.com': '140.82.121.4', 'example.com': '93.184.216.34' };
+      const ip = ips[domain] || '203.0.113.42';
+
+      const lines = [
+        `; <<>> DiG 9.18.1 <<>> ${domain} ${recordType}`,
+        `;; global options: +cmd`,
+        `;; Got answer:`,
+        `;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 12345`,
+        `;; flags: qr rd ra; QUERY: 1, ANSWER: ${recordType === 'MX' ? '2' : '1'}, AUTHORITY: 0`,
+        '',
+        ';; QUESTION SECTION:',
+        `;${domain}.          IN    ${recordType}`,
+        '',
+        ';; ANSWER SECTION:',
+      ];
+
+      if (recordType === 'A') {
+        lines.push(`${domain}.     300   IN    A     ${ip}`);
+      } else if (recordType === 'MX') {
+        lines.push(`${domain}.     300   IN    MX    10 mail1.${domain}.`);
+        lines.push(`${domain}.     300   IN    MX    20 mail2.${domain}.`);
+      } else if (recordType === 'NS') {
+        lines.push(`${domain}.     86400 IN    NS    ns1.dnsprovider.com.`);
+        lines.push(`${domain}.     86400 IN    NS    ns2.dnsprovider.com.`);
+      } else if (recordType === 'TXT') {
+        lines.push(`${domain}.     300   IN    TXT   "v=spf1 include:_spf.google.com ~all"`);
+      }
+
+      lines.push('', `;; Query time: 12 msec`, `;; SERVER: 8.8.8.8#53(8.8.8.8)`, `;; WHEN: Sat Feb 21 12:00:00 UTC 2026`, `;; MSG SIZE  rcvd: 68`);
+      return out(...lines);
+    }
+
+    case 'nikto': {
+      const target = args.find(a => !a.startsWith('-')) || args[args.indexOf('-h') + 1] || 'http://target.com';
+      return out(
+        `- Nikto v2.5.0`,
+        `---------------------------------------------------------------------------`,
+        `+ Target IP:          203.0.113.42`,
+        `+ Target Hostname:    ${target}`,
+        `+ Target Port:        80`,
+        `+ Start Time:         2026-02-21 12:00:00 (GMT0)`,
+        `---------------------------------------------------------------------------`,
+        `+ Server: Apache/2.4.54 (Ubuntu)`,
+        `+ /: The anti-clickjacking X-Frame-Options header is not present.`,
+        `+ /: The X-Content-Type-Options header is not set.`,
+        `+ /: Cookie PHPSESSID created without the httponly flag.`,
+        `+ /config.php: PHP Config file may contain database IDs and passwords.`,
+        `+ /admin/: Directory indexing found.`,
+        `+ /admin/login.php: Admin login page/section found.`,
+        `+ /backup/: Directory listing found — may contain sensitive files.`,
+        `+ /phpinfo.php: Output from the phpinfo() function was found.`,
+        `+ /wp-login.php: WordPress login found.`,
+        `+ /robots.txt: contains 3 entries which should be manually viewed.`,
+        `+ /.env: Environment file found — may contain secrets!`,
+        `+ /server-status: Apache server-status accessible (should be disabled).`,
+        `+ OSVDB-3233: /icons/README: Apache default file found.`,
+        `---------------------------------------------------------------------------`,
+        `+ 7 vulnerabilities found.`,
+        `+ End Time:           2026-02-21 12:02:30 (GMT0) (150 seconds)`,
+        `---------------------------------------------------------------------------`,
+      );
+    }
+
+    case 'hashcat': {
+      const hash = args.find(a => !a.startsWith('-')) || '5f4dcc3b5aa765d61d8327deb882cf99';
+      const mode = args.includes('-m') ? args[args.indexOf('-m') + 1] : '0';
+      const wordlist = args.find(a => a.includes('.txt') || a.includes('rockyou')) || 'rockyou.txt';
+      return out(
+        `hashcat (v6.2.6) starting...`,
+        '',
+        `Hash type: ${mode === '0' ? 'MD5' : mode === '100' ? 'SHA-1' : mode === '1400' ? 'SHA-256' : 'MD5'}`,
+        `Hash target: ${hash}`,
+        `Wordlist: ${wordlist}`,
+        '',
+        `[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%`,
+        '',
+        `${hash}:password123`,
+        '',
+        `Session..........: hashcat`,
+        `Status...........: Cracked`,
+        `Hash.Mode........: ${mode === '0' ? '0 (MD5)' : mode === '100' ? '100 (SHA1)' : '0 (MD5)'}`,
+        `Hash.Target......: ${hash}`,
+        `Time.Started.....: Sat Feb 21 12:00:00 2026`,
+        `Time.Estimated...: Sat Feb 21 12:00:03 2026 (3 secs)`,
+        `Candidates.#1....: 123456 -> zzzzzz`,
+        `Speed.#1.........:  4521.3 kH/s`,
+        '',
+        `Started: Sat Feb 21 12:00:00 2026`,
+        `Stopped: Sat Feb 21 12:00:03 2026`,
+      );
+    }
+
+    case 'john': {
+      const hashFile = args.find(a => !a.startsWith('-')) || 'hashes.txt';
+      const wordlist = args.includes('--wordlist') ? args[args.indexOf('--wordlist') + 1] || args[args.indexOf('--wordlist=') + 1] : 'default';
+      return out(
+        `Using default input encoding: UTF-8`,
+        `Loaded 3 password hashes with no different salts (Raw-MD5)`,
+        `Press 'q' or Ctrl-C to abort, 'h' for help`,
+        '',
+        `[▓▓▓▓▓▓▓▓░░░░░░░░░░░░] 40%  (ETA: 00:00:05)`,
+        `[▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░] 70%  (ETA: 00:00:02)`,
+        `[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%`,
+        '',
+        `password123      (admin)`,
+        `letmein          (user1)`,
+        `dragon2024       (user2)`,
+        '',
+        `3g 0:00:00:03 DONE (2026-02-21 12:00) 1.0g/s 4521Kp/s`,
+        `Use "--show" to display all cracked passwords reliably`,
+        `Session completed.`,
+      );
+    }
+
+    case 'aircrack-ng': {
+      const file = args[0] || 'capture.cap';
+      return out(
+        `Aircrack-ng 1.7`,
+        '',
+        `                   [00:00:04] 4821/14344392 keys tested (1204.23 k/s)`,
+        '',
+        `                           KEY FOUND! [ hackm3plz ]`,
+        '',
+        `      Master Key     : A1 B2 C3 D4 E5 F6 A1 B2 C3 D4 E5 F6 A1 B2 C3 D4`,
+        `                       E5 F6 A1 B2 C3 D4 E5 F6 A1 B2 C3 D4 E5 F6 A1 B2`,
+        '',
+        `      Transient Key  : 00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF`,
+        `                       00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF`,
+        '',
+        `      EAPOL HMAC     : DE AD BE EF CA FE BA BE DE AD BE EF CA FE BA BE`,
+      );
+    }
+
+    case 'sqlmap': {
+      const url = args.find(a => a.startsWith('http') || a.startsWith('-u'))
+        ? args.find(a => a.startsWith('http')) || args[args.indexOf('-u') + 1] || 'http://target.com/login'
+        : 'http://target.com/login';
+      return out(
+        `        ___`,
+        `       __H__`,
+        ` ___ ___[']_____ ___ ___  {1.7.12#stable}`,
+        `|_ -| . [)]     | .'| . |`,
+        `|___|_  ["]_|_|_|__,|  _|`,
+        `      |_|V...       |_|`,
+        '',
+        `[*] starting @ 12:00:00 /2026-02-21/`,
+        ``,
+        `[12:00:01] [INFO] testing connection to the target URL`,
+        `[12:00:01] [INFO] testing if the target URL is stable`,
+        `[12:00:02] [INFO] target URL is stable`,
+        `[12:00:02] [INFO] testing if GET parameter 'id' is dynamic`,
+        `[12:00:02] [INFO] GET parameter 'id' appears to be dynamic`,
+        `[12:00:03] [INFO] heuristic (basic) test shows that GET parameter 'id' might be injectable`,
+        `[12:00:04] [INFO] testing for SQL injection on GET parameter 'id'`,
+        `[12:00:05] [INFO] testing 'AND boolean-based blind'`,
+        `[12:00:06] [INFO] GET parameter 'id' is 'AND boolean-based blind' injectable`,
+        `[12:00:07] [INFO] testing 'MySQL >= 5.0 AND error-based'`,
+        `[12:00:08] [INFO] GET parameter 'id' is 'MySQL >= 5.0 AND error-based' injectable`,
+        '',
+        `Parameter: id (GET)`,
+        `    Type: boolean-based blind`,
+        `    Payload: id=1 AND 5234=5234`,
+        ``,
+        `    Type: error-based`,
+        `    Payload: id=1 AND (SELECT 1 FROM(SELECT COUNT(*),CONCAT(0x716b717671,(SELECT database()),0x717a767871,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.PLUGINS GROUP BY x)a)`,
+        '',
+        `[12:00:09] [INFO] the back-end DBMS is MySQL`,
+        `back-end DBMS: MySQL >= 5.0`,
+        `[12:00:10] [INFO] fetching database names`,
+        `available databases [3]:`,
+        `[*] information_schema`,
+        `[*] webapp_db`,
+        `[*] mysql`,
+      );
+    }
+
+    case 'hydra': {
+      const target = args.find(a => !a.startsWith('-')) || '192.168.1.100';
+      const service = args.find(a => ['ssh', 'ftp', 'http', 'mysql', 'rdp'].includes(a)) || 'ssh';
+      return out(
+        `Hydra v9.5 (c) 2023 by van Hauser/THC`,
+        '',
+        `[DATA] max 16 tasks per 1 server, overall 16 tasks`,
+        `[DATA] attacking ${service}://${target}:${service === 'ssh' ? '22' : service === 'ftp' ? '21' : '80'}`,
+        `[STATUS] 128 of 14344392 [0.00%] [~112000 tries left]`,
+        `[STATUS] 4521 of 14344392 [0.03%] [~31700 tries left]`,
+        `[STATUS] 12453 of 14344392 [0.09%]`,
+        `[${service === 'ssh' ? '22' : '80'}][${service}] host: ${target}   login: admin   password: P@ssw0rd2024`,
+        '',
+        `1 of 1 target successfully completed, 1 valid password found`,
+        `Hydra finished at 2026-02-21 12:00:30`,
+      );
+    }
+
+    case 'tcpdump': {
+      const iface = args.includes('-i') ? args[args.indexOf('-i') + 1] : 'eth0';
+      return out(
+        `tcpdump: listening on ${iface}, link-type EN10MB (Ethernet), snapshot length 262144 bytes`,
+        `12:00:01.234567 IP 192.168.1.10.52341 > 93.184.216.34.80: Flags [S], seq 1234567890`,
+        `12:00:01.267890 IP 93.184.216.34.80 > 192.168.1.10.52341: Flags [S.], seq 987654321, ack 1234567891`,
+        `12:00:01.268123 IP 192.168.1.10.52341 > 93.184.216.34.80: Flags [.], ack 987654322`,
+        `12:00:01.270000 IP 192.168.1.10.52341 > 93.184.216.34.80: Flags [P.], HTTP GET /login`,
+        `12:00:01.312000 IP 93.184.216.34.80 > 192.168.1.10.52341: Flags [P.], HTTP 200 OK`,
+        `12:00:02.100000 IP 192.168.1.10.52341 > 93.184.216.34.80: Flags [P.], HTTP POST /login username=admin&password=letmein`,
+        `12:00:02.150000 IP 93.184.216.34.80 > 192.168.1.10.52341: Flags [P.], HTTP 302 Found Set-Cookie: session=abc123`,
+        `12:00:03.200000 ARP, Request who-has 192.168.1.1 tell 192.168.1.10`,
+        `12:00:03.201000 ARP, Reply 192.168.1.1 is-at 02:42:ac:11:00:01`,
+        '',
+        `9 packets captured`,
+        `9 packets received by filter`,
+      );
+    }
+
+    case 'fail2ban-client': {
+      const sub = args[0];
+      if (sub === 'status') {
+        const jail = args[1];
+        if (jail === 'sshd') {
+          return out(
+            `Status for the jail: sshd`,
+            `|- Filter`,
+            `|  |- Currently failed: 3`,
+            `|  |- Total failed:    47`,
+            `|  \`- File list:       /var/log/auth.log`,
+            `\`- Actions`,
+            `   |- Currently banned: 2`,
+            `   |- Total banned:     12`,
+            `   \`- Banned IP list:   10.0.0.55 203.0.113.99`,
+          );
+        }
+        return out(
+          `Status`,
+          `|- Number of jail:   3`,
+          `\`- Jail list:        sshd, nginx-http-auth, apache-badbots`,
+        );
+      }
+      return out('Usage: fail2ban-client status [jail]');
+    }
+
     default:
       return out(`command not found: ${cmd}. Type "help" for available commands.`);
   }
