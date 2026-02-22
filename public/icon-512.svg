@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="#0a0e1a"/><text x="256" y="330" text-anchor="middle" font-size="280" fill="#00f0ff">⚡</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="100" fill="#0a0e17"/>
+  <rect x="16" y="16" width="480" height="480" rx="90" fill="none" stroke="#00f0ff" stroke-width="3" opacity="0.3"/>
+  <text x="256" y="210" text-anchor="middle" font-family="monospace" font-weight="900" font-size="140" fill="#00f0ff">NQ</text>
+  <text x="256" y="310" text-anchor="middle" font-family="monospace" font-size="36" fill="#39ff14" opacity="0.8">⚡ QUEST</text>
+  <line x1="100" y1="360" x2="412" y2="360" stroke="#00f0ff" stroke-width="2" opacity="0.2"/>
+  <text x="256" y="410" text-anchor="middle" font-family="monospace" font-size="26" fill="#666">LEARN • HACK • BUILD</text>
+</svg>

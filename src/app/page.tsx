@@ -4,27 +4,44 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { loadState, getLevelInfo, type GameState } from '@/lib/gameState';
 import { paths, getPathMissionCount, getPathCompletedCount } from '@/lib/chapters';
+import { loadSubscription, type SubscriptionState } from '@/lib/subscription';
+import ProBadge from '@/components/ProBadge';
+import UpgradeBanner from '@/components/UpgradeBanner';
+import UpgradePrompt from '@/components/UpgradePrompt';
 
 export default function Home() {
   const [state, setState] = useState<GameState | null>(null);
+  const [sub, setSub] = useState<SubscriptionState | null>(null);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     setState(loadState());
+    setSub(loadSubscription());
   }, []);
 
-  if (!state) return <div className="min-h-screen" />;
+  const reload = () => {
+    setState(loadState());
+    setSub(loadSubscription());
+  };
+
+  if (!state || !sub) return <div className="min-h-screen" />;
 
   const { current, next } = getLevelInfo(state.xp);
   const xpProgress = next ? ((state.xp - current.minXP) / (next.minXP - current.minXP)) * 100 : 100;
 
   return (
     <div className="space-y-6 pb-8">
+      <UpgradePrompt open={showUpgrade} onClose={() => setShowUpgrade(false)} onUpgraded={reload} />
+
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center pt-4">
         <h1 className="text-3xl font-bold glow-cyan" style={{ color: '#00f0ff' }}>
           ⚡ NetQuest
         </h1>
-        <p className="text-gray-500 text-sm mt-1">Learn tech by doing</p>
+        <p className="text-gray-500 text-sm mt-1">
+          Learn tech by doing
+          {sub.tier === 'pro' && <ProBadge className="ml-2" />}
+        </p>
       </motion.div>
 
       {/* Stats Row */}
@@ -111,6 +128,13 @@ export default function Home() {
           })}
         </div>
       </div>
+
+      {/* Upgrade Banner for free users */}
+      {sub.tier === 'free' && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+          <UpgradeBanner onUpgradeClick={() => setShowUpgrade(true)} />
+        </motion.div>
+      )}
     </div>
   );
 }

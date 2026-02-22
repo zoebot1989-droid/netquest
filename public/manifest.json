@@ -1,22 +1,25 @@
 {
-  "name": "NetQuest",
+  "name": "NetQuest — Learn IT & Cybersecurity",
   "short_name": "NetQuest",
-  "description": "Learn networking through interactive missions and a virtual sandbox",
-  "start_url": "/",
+  "description": "Master networking, Linux, Python, cybersecurity and more through interactive missions. 126 hands-on lessons from IP basics to white hat hacking.",
+  "start_url": "/netquest/",
   "display": "standalone",
-  "background_color": "#0a0e1a",
+  "background_color": "#0a0e17",
   "theme_color": "#00f0ff",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
+  "categories": ["education", "games"],
   "icons": [
     {
-      "src": "/icon-192.svg",
+      "src": "/netquest/icon-192.svg",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.svg",
+      "src": "/netquest/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

@@ -8,6 +8,7 @@ const tabs = [
   { href: '/terminal', label: 'Terminal', icon: '💻' },
   { href: '/reference', label: 'Ref', icon: '📚' },
   { href: '/achievements', label: 'Badges', icon: '🏆' },
+  { href: '/profile', label: 'Profile', icon: '⚙️' },
 ];
 
 export default function BottomNav() {

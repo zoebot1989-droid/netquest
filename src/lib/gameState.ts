@@ -23,7 +23,7 @@ const DEFAULT_STATE: GameState = {
 };
 
 const STORAGE_KEY = 'netquest-state';
-const LIFE_REGEN_MS = 30 * 60 * 1000; // 30 min per life
+const LIFE_REGEN_MS = 30 * 60 * 1000; // 30 min per life (default, overridden by subscription)
 
 // Migration: old mission IDs (1-1) → new (net-1-1)
 const OLD_TO_NEW: Record<string, string> = {
