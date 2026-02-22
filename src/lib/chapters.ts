@@ -390,6 +390,59 @@ const devopsChapters: Chapter[] = [
   },
 ];
 
+const hardwareChapters: Chapter[] = [
+  {
+    id: 1,
+    title: 'Inside the Computer',
+    icon: '🖥️',
+    missions: [
+      { id: 'hw-1-1', title: 'How Computers Work', subtitle: 'CPU, RAM, storage, and the fetch-decode-execute cycle', xp: 50, playable: true },
+      { id: 'hw-1-2', title: 'The CPU', subtitle: 'Cores, threads, clock speed, cache levels', xp: 60, playable: true },
+      { id: 'hw-1-3', title: 'Memory (RAM)', subtitle: 'DDR4 vs DDR5, speed, capacity, dual channel', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 2,
+    title: 'Storage & Power',
+    icon: '💾',
+    missions: [
+      { id: 'hw-2-1', title: 'Storage — HDD vs SSD vs NVMe', subtitle: 'Speed, interfaces, and use cases', xp: 60, playable: true },
+      { id: 'hw-2-2', title: 'The Power Supply (PSU)', subtitle: 'Wattage, efficiency ratings, calculating needs', xp: 60, playable: true },
+      { id: 'hw-2-3', title: 'The Motherboard', subtitle: 'Form factors, chipsets, sockets, expansion slots', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 3,
+    title: 'Graphics & Display',
+    icon: '🎮',
+    missions: [
+      { id: 'hw-3-1', title: 'GPUs Explained', subtitle: 'Integrated vs discrete, VRAM, ray tracing', xp: 60, playable: true },
+      { id: 'hw-3-2', title: 'Monitors & Display', subtitle: 'Resolution, refresh rate, panel types', xp: 60, playable: true },
+      { id: 'hw-3-3', title: 'Cooling Solutions', subtitle: 'Air vs liquid, thermal paste, airflow design', xp: 60, playable: true },
+    ],
+  },
+  {
+    id: 4,
+    title: 'Building a PC',
+    icon: '🔧',
+    missions: [
+      { id: 'hw-4-1', title: 'Planning Your Build', subtitle: 'Budget, compatibility, avoiding bottlenecks', xp: 70, playable: true },
+      { id: 'hw-4-2', title: 'Assembly Step-by-Step', subtitle: 'CPU to cables — the full build process', xp: 80, playable: true },
+      { id: 'hw-4-3', title: 'BIOS & First Boot', subtitle: 'POST, UEFI setup, XMP, boot order', xp: 70, playable: true },
+    ],
+  },
+  {
+    id: 5,
+    title: 'Servers & Infrastructure',
+    icon: '🏗️',
+    missions: [
+      { id: 'hw-5-1', title: 'What is a Server?', subtitle: 'Server hardware, redundancy, RAID, ECC RAM', xp: 70, playable: true },
+      { id: 'hw-5-2', title: 'Networking Hardware', subtitle: 'Routers, switches, cables, PoE, network design', xp: 70, playable: true },
+      { id: 'hw-5-3', title: 'Building a Home Lab', subtitle: 'Proxmox, Docker, NAS — your own infrastructure', xp: 100, playable: true },
+    ],
+  },
+];
+
 export const paths: Path[] = [
   {
     id: 'networking',
@@ -446,8 +499,7 @@ export const paths: Path[] = [
     title: 'Hardware',
     icon: '🖥️',
     description: 'CPUs, RAM, building machines',
-    chapters: [],
-    comingSoon: true,
+    chapters: hardwareChapters,
   },
 ];
 

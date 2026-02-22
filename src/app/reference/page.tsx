@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python', 'Web Dev', 'DevOps'];
+const tabs = ['Ports', 'IPs', 'Subnets', 'Protocols', 'Net Cmds', 'Terminal', 'Linux', 'Python', 'Web Dev', 'DevOps', 'Hardware'];
 
 const portsData = [
   { port: 20, service: 'FTP Data', protocol: 'TCP' },
@@ -1027,6 +1027,181 @@ jobs:
                     <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cmd}</span>
                     <span className="text-gray-500">— {c.desc}</span>
                   </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === 10 && (
+          <div className="space-y-4">
+            {/* CPU Specs */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🧠 CPU Specs Cheat Sheet</h3>
+              <div className="space-y-1">
+                {[
+                  { spec: 'Cores', desc: 'Independent processors — more = better multitasking' },
+                  { spec: 'Threads', desc: 'Virtual cores via hyperthreading (usually 2x cores)' },
+                  { spec: 'Clock Speed (GHz)', desc: 'Cycles per second — higher = faster per core' },
+                  { spec: 'L1/L2/L3 Cache', desc: 'Ultra-fast on-chip memory (L1 fastest, L3 largest)' },
+                  { spec: 'TDP (Watts)', desc: 'Thermal design power — heat output, determines cooler needed' },
+                  { spec: 'Socket', desc: 'Physical connection — must match motherboard (LGA 1700, AM5)' },
+                ].map(s => (
+                  <div key={s.spec} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#00f0ff' }}>{s.spec}</span>
+                    <span className="text-gray-500">— {s.desc}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 text-xs space-y-1">
+                <p className="font-semibold text-gray-400">CPU Tiers:</p>
+                <div className="font-mono">
+                  <div><span style={{ color: '#39ff14' }}>i3 / Ryzen 3</span> <span className="text-gray-500">— Budget (4 cores)</span></div>
+                  <div><span style={{ color: '#00f0ff' }}>i5 / Ryzen 5</span> <span className="text-gray-500">— Mid-range, best value (6-10 cores)</span></div>
+                  <div><span style={{ color: '#ff9500' }}>i7 / Ryzen 7</span> <span className="text-gray-500">— High-end (8-16 cores)</span></div>
+                  <div><span className="text-red-400">i9 / Ryzen 9</span> <span className="text-gray-500">— Enthusiast (16-24 cores)</span></div>
+                </div>
+              </div>
+            </div>
+
+            {/* RAM */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">⚡ RAM Comparison</h3>
+              <div className="grid grid-cols-3 gap-1 text-xs font-mono mb-2">
+                <div className="text-gray-500 font-sans">Spec</div>
+                <div style={{ color: '#00f0ff' }}>DDR4</div>
+                <div style={{ color: '#39ff14' }}>DDR5</div>
+                <div className="text-gray-400 font-sans">Speed</div><div>2133-3600 MHz</div><div>4800-8000+ MHz</div>
+                <div className="text-gray-400 font-sans">Capacity</div><div>Up to 32 GB/stick</div><div>Up to 64 GB/stick</div>
+                <div className="text-gray-400 font-sans">Voltage</div><div>1.2V</div><div>1.1V</div>
+                <div className="text-gray-400 font-sans">Price</div><div>Cheaper</div><div>Premium</div>
+              </div>
+              <p className="text-xs text-gray-500">💡 Always use dual channel (2 sticks). 16 GB = gaming sweet spot. 32 GB = content creation.</p>
+            </div>
+
+            {/* Storage */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">💾 Storage Comparison</h3>
+              <div className="space-y-2 text-xs">
+                {[
+                  { type: '💿 HDD', speed: '80-160 MB/s', price: '$20/TB', best: 'Bulk storage, backups' },
+                  { type: '⚡ SATA SSD', speed: '500-560 MB/s', price: '$50/TB', best: 'Budget boot drive' },
+                  { type: '🚀 NVMe Gen 4', speed: '5,000-7,000 MB/s', price: '$60/TB', best: 'Best value boot/gaming' },
+                  { type: '🏎️ NVMe Gen 5', speed: '10,000-14,000 MB/s', price: '$120/TB', best: 'Enthusiast, video editing' },
+                ].map(s => (
+                  <div key={s.type} className="bg-gray-800/50 rounded-lg p-2">
+                    <div className="flex justify-between"><span className="font-semibold">{s.type}</span><span style={{ color: '#ff9500' }}>{s.price}</span></div>
+                    <div className="flex justify-between text-gray-400"><span>{s.speed}</span><span>{s.best}</span></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* GPU Tiers */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🎮 GPU Tiers</h3>
+              <div className="space-y-2 text-xs">
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#39ff14' }}>Budget ($200-350)</p>
+                  <div className="text-gray-400">RTX 4060 / RX 7600 — 1080p gaming, 8 GB VRAM</div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#00f0ff' }}>Mid-range ($400-600)</p>
+                  <div className="text-gray-400">RTX 4070 / RX 7800 XT — 1440p gaming, 12 GB VRAM</div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1" style={{ color: '#ff9500' }}>High-end ($700-1000)</p>
+                  <div className="text-gray-400">RTX 4080 Super / RX 7900 XTX — 4K gaming, 16 GB VRAM</div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1 text-red-400">Enthusiast ($1500+)</p>
+                  <div className="text-gray-400">RTX 4090 — 4K max, AI/ML, 24 GB VRAM</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Motherboard Form Factors */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔲 Motherboard Form Factors</h3>
+              <div className="space-y-1 text-xs">
+                {[
+                  { form: 'ATX', size: '305×244mm', slots: '7 PCIe, 4 RAM', best: 'Standard desktop builds' },
+                  { form: 'Micro-ATX', size: '244×244mm', slots: '4 PCIe, 2-4 RAM', best: 'Compact builds' },
+                  { form: 'Mini-ITX', size: '170×170mm', slots: '1 PCIe, 2 RAM', best: 'Small form factor' },
+                ].map(f => (
+                  <div key={f.form} className="flex justify-between bg-gray-800/50 rounded-lg p-2">
+                    <div><span className="font-semibold" style={{ color: '#00f0ff' }}>{f.form}</span> <span className="text-gray-500">({f.size})</span></div>
+                    <span className="text-gray-400">{f.best}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PSU Wattage Guide */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔌 PSU Wattage Guide</h3>
+              <div className="space-y-1 text-xs font-mono">
+                {[
+                  { comp: 'CPU (mid-range)', watts: '65-125W' },
+                  { comp: 'GPU (mid-range)', watts: '150-250W' },
+                  { comp: 'RAM (2 sticks)', watts: '5-10W' },
+                  { comp: 'SSD/NVMe', watts: '5-10W' },
+                  { comp: 'HDD', watts: '6-8W' },
+                  { comp: 'Fans (each)', watts: '2-5W' },
+                  { comp: 'Motherboard', watts: '40-80W' },
+                ].map(c => (
+                  <div key={c.comp} className="flex justify-between">
+                    <span className="text-gray-300">{c.comp}</span>
+                    <span style={{ color: '#ff9500' }}>{c.watts}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">💡 Total draw × 1.5 = recommended PSU wattage. Always get 80+ Gold.</p>
+            </div>
+
+            {/* Cable Types */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">🔌 Cable Types</h3>
+              <div className="space-y-1">
+                {[
+                  { cable: '24-pin ATX', desc: 'Main motherboard power' },
+                  { cable: '8-pin EPS (CPU)', desc: 'CPU power (top of board)' },
+                  { cable: '6+2 pin PCIe', desc: 'GPU power' },
+                  { cable: 'SATA Power', desc: 'SSD/HDD power (L-shaped)' },
+                  { cable: 'SATA Data', desc: 'Storage to motherboard' },
+                  { cable: 'Cat5e/Cat6/Cat6a', desc: 'Ethernet (1/10 Gbps)' },
+                  { cable: 'Fiber (SM/MM)', desc: 'High-speed, long distance' },
+                  { cable: 'USB-A / USB-C', desc: 'Peripherals, data transfer' },
+                  { cable: 'HDMI / DisplayPort', desc: 'Video output to monitor' },
+                ].map(c => (
+                  <div key={c.cable} className="flex gap-2 text-xs">
+                    <span className="font-mono shrink-0" style={{ color: '#39ff14' }}>{c.cable}</span>
+                    <span className="text-gray-500">— {c.desc}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PC Build Checklist */}
+            <div className="card">
+              <h3 className="font-semibold mb-2 text-sm">✅ PC Build Checklist</h3>
+              <div className="space-y-1 text-xs">
+                {[
+                  '☐ CPU socket matches motherboard',
+                  '☐ RAM type matches (DDR4 or DDR5)',
+                  '☐ GPU fits in case (check length)',
+                  '☐ PSU has enough wattage (+50% headroom)',
+                  '☐ CPU cooler clears RAM and case',
+                  '☐ Case fits motherboard form factor',
+                  '☐ M.2 slots available for NVMe drives',
+                  '☐ Thermal paste applied (pea-sized dot)',
+                  '☐ All power cables connected (24-pin, CPU, GPU)',
+                  '☐ RAM in correct slots for dual channel',
+                  '☐ Monitor plugged into GPU (not motherboard)',
+                  '☐ XMP/DOCP enabled in BIOS',
+                  '☐ Boot order set correctly',
+                  '☐ OS installed and drivers updated',
+                ].map(item => (
+                  <div key={item} className="text-gray-300 font-mono">{item}</div>
                 ))}
               </div>
             </div>

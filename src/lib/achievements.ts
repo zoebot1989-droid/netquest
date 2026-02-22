@@ -64,4 +64,13 @@ export const achievements: Achievement[] = [
   { id: 'pipeline-pro', title: 'Pipeline Pro', description: 'Build a CI/CD pipeline', icon: '🔄' },
   { id: 'cloud-native', title: 'Cloud Native', description: 'Learn about cloud providers', icon: '☁️' },
   { id: 'full-devops', title: 'Full DevOps', description: 'Complete the DevOps path', icon: '🏆' },
+
+  // Hardware
+  { id: 'pc-builder', title: 'PC Builder', description: 'Complete first Hardware mission', icon: '🖥️' },
+  { id: 'spec-reader', title: 'Spec Reader', description: 'Compare CPUs correctly', icon: '📋' },
+  { id: 'cable-manager', title: 'Cable Manager', description: 'Learn about all cable types', icon: '🔌' },
+  { id: 'budget-builder', title: 'Budget Builder', description: 'Build a PC within budget', icon: '💰' },
+  { id: 'first-boot', title: 'First Boot', description: 'Configure BIOS settings', icon: '⚡' },
+  { id: 'server-admin', title: 'Server Admin', description: 'Learn about server hardware', icon: '🏗️' },
+  { id: 'home-lab-hero', title: 'Home Lab Hero', description: 'Plan a home lab', icon: '🏠' },
 ];
